@@ -1,0 +1,10 @@
+<svg width="200" height="48" xmlns="http://www.w3.org/2000/svg">
+  <!-- "AI" 使用 RGBrgb(99.215686%,75.294119%,19.215687%) -->
+  <text x="10" y="32" fill="rgb(99.215686%,75.294119%,19.215687%)" font-size="24" font-family="Noto Sans SC" font-weight="900" stroke="rgb(99.215686%,75.294119%,19.215687%)" stroke-width="2">
+    AI
+  </text>
+  <!-- "ToolBox" 使用 RGB(0%, 68.235296%, 29.803923%) -->
+  <text x="45" y="32" fill="rgb(0%, 68.235296%, 29.803923%)" font-size="24" font-family="Noto Sans SC" font-weight="900" stroke="rgb(0%, 68.235296%, 29.803923%)" stroke-width="2">
+    ToolBox
+  </text>
+</svg>

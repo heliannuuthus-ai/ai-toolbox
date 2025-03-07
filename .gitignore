@@ -11,7 +11,7 @@ node_modules/
 # dotenv environment variables file
 .env
 
-.vscode/
+.vscode
 # .vscode workspace settings file
 .vscode/settings.json
 .vscode/launch.json

@@ -1,30 +1,22 @@
 import { Layout } from "antd";
 import Sider from "@/layout/Sider";
+import Header from "@/layout/Header";
 import ThemeProvider from "@/layout/ThemeProvider";
 
-const { Header, Content, Footer } = Layout;
-
-const headerStyle: React.CSSProperties = {
-  textAlign: "center",
-  color: "#fff",
-  height: 72,
-  paddingInline: 48,
-  lineHeight: "72px",
-  backgroundColor: "#4096ff",
-};
+const { Content, Footer } = Layout;
 
 const contentStyle: React.CSSProperties = {
   textAlign: "center",
   minHeight: 120,
   lineHeight: "120px",
-  color: "#fff",
-  backgroundColor: "#0958d9",
+  color: "var(--text-primary)",
+  backgroundColor: "var(--background-color)",
 };
 
 const footerStyle: React.CSSProperties = {
   textAlign: "center",
-  color: "#fff",
-  backgroundColor: "#4096ff",
+  color: "var(--text-primary)",
+  backgroundColor: "var(--background-color)",
 };
 
 const layoutStyle = {
@@ -40,9 +32,7 @@ const App = () => {
       <Layout style={layoutStyle}>
         <Sider />
         <Layout>
-          <Header data-tauri-drag-region style={headerStyle}>
-            Header
-          </Header>
+          <Header />
           <Content style={contentStyle}>Content</Content>
           <Footer style={footerStyle}>Footer</Footer>
         </Layout>

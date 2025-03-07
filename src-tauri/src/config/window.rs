@@ -85,6 +85,7 @@ pub fn create() {
 
 pub fn quit(code: i32) {
     let app_handle = AppManager::instance().get_handler();
+    info!("Quitting with code: {}", code);
     if let Some(window) = app_handle.get_webview_window("main") {
         let _ = window.close();
     }

@@ -48,6 +48,7 @@ impl AppManager {
             .expect("AppHandle not initialized")
     }
 
+    #[allow(dead_code)]
     pub fn enable_activation_policy_regular(&self) {
         #[cfg(target_os = "macos")]
         {

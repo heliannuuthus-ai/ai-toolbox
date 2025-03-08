@@ -76,21 +76,24 @@ impl Hotkey {
         let _ = shortcut.on_shortcut(hotkey, move |app_handle, hotkey, event| {
             if event.state == ShortcutState::Pressed {
                 info!("Pressed hotkey: {}", hotkey.key);
-                if Code::KeyQ.eq(&hotkey.key) && quit {
-                    if let Some(window) = app_handle.get_webview_window("main") {
-                        if window.is_focused().unwrap_or(false) {
-                            info!("Executing quit");
-                            f();
-                        }
+                if let Some(window) = app_handle.get_webview_window("main") {
+                    if Code::KeyQ.eq(&hotkey.key) && quit {
+                        // 发现调用 window 的方法会阻塞主线程，所以需要使用线程来调用
+                        std::thread::spawn(move || {
+                            if window.is_focused().unwrap_or(false) {
+                                info!("Executing quit");
+                                f();
+                            }
+                        });
                     } else {
-                        if let Some(window) = app_handle.get_webview_window("main") {
+                        std::thread::spawn(move || {
                             if window.is_focused().unwrap_or(false)
                                 && window.is_visible().unwrap_or(false)
                             {
                                 info!("Executing function");
                                 f();
                             }
-                        }
+                        });
                     }
                 }
             }

@@ -1,12 +1,13 @@
-use crate::AppManager;
-use tauri::{AppHandle, Manager};
+use crate::core::handler::Handler;
+use tauri::{image::Image, AppHandle, Manager};
 use tauri_plugin_window_state::{AppHandleExt, StateFlags};
 use tracing::{error, info};
 
 pub fn create() {
     info!("Starting to create window");
-    let app_handle = AppManager::instance().get_handler();
+    let app_handle = Handler::instance().get_handler().unwrap();
 
+    #[cfg(target_os = "macos")]
     AppManager::instance().enable_activation_policy_regular();
 
     if let Some(window) = app_handle.get_webview_window("main") {
@@ -66,13 +67,15 @@ pub fn create() {
     .inner_size(890.0, 700.0)
     .min_inner_size(620.0, 550.0)
     .transparent(true)
+    .icon(Image::from_bytes(include_bytes!("../../icons/icon.png")).unwrap())
+    .expect("invalid linux icon")
     .build();
 
     match window {
         Ok(window) => {
             info!("Window created successfully, attempting to show");
-            let _ = window.show();
-            let _ = window.set_focus();
+            window.show().unwrap();
+            window.set_focus().unwrap();
 
             // 设置窗口状态监控，实时保存窗口位置和大小
             add_window_state_listener(&app_handle);
@@ -84,7 +87,7 @@ pub fn create() {
 }
 
 pub fn quit(code: i32) {
-    let app_handle = AppManager::instance().get_handler();
+    let app_handle = Handler::instance().get_handler().unwrap();
     info!("Quitting with code: {}", code);
     if let Some(window) = app_handle.get_webview_window("main") {
         let _ = window.close();

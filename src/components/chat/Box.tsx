@@ -1,68 +1,76 @@
-import React, { useEffect, useRef, useState } from "react";
-import { createStyles } from "antd-style";
-import Message, { MessageProps } from "@/components/chat/Message";
-import Input from "@/components/chat/Input";
+import MessageBox from "@/components/chat/MessageBox";
+import { Input, FunctionButtons } from "@/components/chat/Input";
 
-const useStyles = createStyles(({ css }) => ({
-  chatBoxWrapper: css`
-    width: 100%;
+import { createStyles } from "antd-style";
+
+const useStyles = createStyles(({ css, token }) => ({
+  container: css`
     height: 100%;
-    height: 100%;
+    overflow-y: auto;
     display: flex;
-    flex-direction: column;
-    background: #fff;
-    overflow: hidden;
-    display: flex;
+    align-items: center;
     flex-direction: column;
   `,
-  messagesContainer: css`
-    flex: 1;
-    overflow-y: auto;
-    padding: 10px;
+  inputContainer: css`
+    position: absolute;
+    bottom: 0;
+    left: var(--sidebar-width);
+    right: 0;
+    max-width: 50rem;
+    margin-left: auto;
+    margin-right: auto;
+  `,
+  input: css`
+    position: relative;
+    padding-bottom: 1rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  `,
+  inputForm: css`
+    position: relative;
+    border-radius: 1.5rem;
+    background-color: var(--background-color);
+    box-shadow: ${token.boxShadow};
+  `,
+  inputBox: css`
+    padding-bottom: 3rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  `,
+  functionButtons: css`
+    max-width: 100%;
+    border-color: transparent;
+    border-width: 2px;
+    padding: 0.75rem;
+    position: absolute;
     display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+    left: 0;
+    right: 0;
+    bottom: 0;
   `,
 }));
 
-const ChatBox: React.FC = () => {
+const Box = () => {
   const { styles } = useStyles();
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [messages, setMessages] = useState<MessageProps[]>([
-    {
-      id: "1",
-      user: { avatar: "https://joeschmoe.io/api/v1/random", name: "张三" },
-      content: "这是一条接收的消息。\n支持 **Markdown** 语法。",
-      type: "received",
-    },
-  ]);
-
-  // 自动滚动到底部
-  useEffect(() => {
-  }, [messages]);
-
-  // 处理发送消息
-  const handleSend = (content: string) => {
-    const newMessage: MessageProps = {
-      id: "2",
-      user: { avatar: "https://joeschmoe.io/api/v1/jess", name: "我" },
-      content,
-      type: "sent",
-    };
-    setMessages((prev) => [...prev, newMessage]);
-  };
-
   return (
-    <div className={styles.chatBoxWrapper}>
-      <div className={styles.messagesContainer}>
-        {messages.map((msg, index) => (
-          <Message key={index} {...msg} />
-        ))}
-        <div ref={messagesEndRef} />
+    <>
+      <div className={styles.container}>
+        <MessageBox />
       </div>
-      <Input onSend={handleSend} />
-    </div>
+      <div className={styles.inputContainer}>
+        <div className={styles.input}>
+          <div className={styles.inputForm}>
+            <div className={styles.inputBox}>
+              <Input />
+            </div>
+            <div className={styles.functionButtons}>
+              <FunctionButtons />
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 
-export default ChatBox;
+export default Box;

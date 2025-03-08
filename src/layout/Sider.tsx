@@ -27,7 +27,7 @@ const { Sider: AntdSider } = Layout;
 const Sider = () => {
   const { styles } = useStyles();
   return (
-    <AntdSider width="222px" className={styles.container}>
+    <AntdSider width={"var(--sidebar-width)"} className={styles.container}>
       <div className={styles.logoVertical}>
         <div
           style={{

@@ -1,5 +1,10 @@
 @import "./font.css";
 
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scroller-thumb) var(--scroller-track);
+}
+
 body {
   margin: 0;
   font-family:
@@ -16,11 +21,13 @@ body {
   --primary-main: #2e8555;
   --text-primary: #1f1f1f;
   --selection-color: #f5f5f5;
-  --scroller-color: #8c8c8c;
+  --scroller-thumb: rgba(0, 0, 0, 0.3);
+  --scroller-track: transparent;
   --background-color: #fff;
   --background-color-alpha: rgba(24, 103, 192, 0.1);
   --divider-color: rgba(5, 5, 5, 0.06);
   --border-radius: 8px;
+  --sidebar-width: 222px;
 
   font-size: 16px;
   line-height: 24px;
@@ -47,9 +54,14 @@ body {
   height: 8px;
   background: transparent;
 }
+
 *::-webkit-scrollbar-thumb {
   border-radius: 6px;
-  background-color: var(--scroller-color);
+  background-color: var(--scroller-thumb);
+}
+
+*::-webkit-scrollbar-track {
+  background-color: var(--scroller-track);
 }
 *::-webkit-scrollbar-corner {
   background-color: transparent;

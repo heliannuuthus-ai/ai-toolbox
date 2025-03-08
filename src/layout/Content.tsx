@@ -7,9 +7,9 @@ const useStyles = createStyles(({ css }) => ({
   content: css`
     height: "100%";
     display: "flex";
-    flexdirection: "column";
+    flex-direction: "column";
     overflow: "hidden";
-    backgroundcolor: "var(--background-color)";
+    background-color: var(--background-color);
     width: "100%";
   `,
 }));

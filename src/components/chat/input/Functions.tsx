@@ -1,9 +1,9 @@
-import { Button, Select } from "antd";
-import Icon from "@ant-design/icons";
-import LightOn from "@/assets/images/button/light-on.svg?react";
 import LightOff from "@/assets/images/button/light-off.svg?react";
+import LightOn from "@/assets/images/button/light-on.svg?react";
+import Icon from "@ant-design/icons";
+import { Button } from "antd";
 import { createStyles } from "antd-style";
-import { useState } from "react";
+import Select from "@/components/chat/input/Select";
 
 const useStyles = createStyles(({ css }) => ({
   container: css`
@@ -29,15 +29,25 @@ const useStyles = createStyles(({ css }) => ({
   `,
 }));
 
-const Functions = () => {
-  const [selectedThink, setSelectedThink] = useState<boolean>(false);
+const Functions = ({
+  model,
+  setModel,
+  thinking,
+  setThinking,
+}: {
+  model: string;
+  setModel: (model: string) => void;
+  thinking: boolean;
+  setThinking: (thinking: boolean) => void;
+}) => {
   const { styles } = useStyles();
+
   return (
     <div className={styles.container}>
       <div className={styles.buttons}>
         <Button
           color="default"
-          variant={selectedThink ? "filled" : "outlined"}
+          variant={thinking ? "filled" : "outlined"}
           icon={
             <Icon
               style={{
@@ -45,15 +55,15 @@ const Functions = () => {
                 display: "flex",
                 alignItems: "center",
               }}
-              component={selectedThink ? LightOn : LightOff}
+              component={thinking ? LightOn : LightOff}
             />
           }
-          onClick={() => setSelectedThink(!selectedThink)}
+          onClick={() => setThinking(!thinking)}
         >
           思考
         </Button>
       </div>
-      <Select style={{ height: "36px", borderRadius: "9999px" }} />
+      <Select model={model} setModel={setModel} thinking={thinking} />
     </div>
   );
 };

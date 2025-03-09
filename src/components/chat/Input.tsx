@@ -3,7 +3,9 @@ import TextArea from "@/components/chat/input/Textarea";
 import Functions from "@/components/chat/input/Functions";
 import Upload from "@/components/chat/input/Upload";
 import Submit from "@/components/chat/input/Submit";
-
+import { wikipedia } from "@/apis/wikipedia";
+import { MessageProps, MessageRole } from "@/components/chat/MessageBox";
+import { useState } from "react";
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
     position: relative;
@@ -39,18 +41,76 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const Input = () => {
+const Input = ({
+  setMessages,
+}: {
+  setMessages: (
+    messageCreator: (prevMessages: MessageProps[]) => MessageProps[],
+  ) => void;
+}) => {
   const { styles } = useStyles();
+  const [model, setModel] = useState<string>("");
+  const [thinking, setThinking] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
+  const [image, setImage] = useState<File | null>(null);
+
+  const onSubmit = async () => {
+    const randomId = Date.now();
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: randomId.toString(),
+        role: MessageRole.USER,
+        content: message,
+      },
+    ]);
+
+    const assistantMessageId = (randomId + 1).toString(); // 确保 ID 唯一
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: assistantMessageId,
+        role: MessageRole.ASSISTANT,
+        content: "",
+      },
+    ]);
+    await wikipedia(model, message, image, (responseText) => {
+      setMessages((prevMessages) => {
+        const lastAssistantMessageIndex = prevMessages.findIndex(
+          (msg) => msg.id === assistantMessageId,
+        );
+        if (lastAssistantMessageIndex === -1) return prevMessages;
+        console.log("responseText ====", responseText);
+        const newMessages = [...prevMessages];
+        newMessages[lastAssistantMessageIndex] = {
+          ...newMessages[lastAssistantMessageIndex],
+          content: responseText,
+        };
+
+        return newMessages;
+      });
+    });
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.form}>
         <div className={styles.textarea}>
-          <TextArea />
+          <TextArea
+            message={message}
+            setMessage={setMessage}
+            onSubmit={onSubmit}
+          />
         </div>
         <div className={styles.buttons}>
-          <Upload />
-          <Functions />
-          <Submit />
+          <Upload setImage={setImage} />
+          <Functions
+            model={model}
+            setModel={setModel}
+            thinking={thinking}
+            setThinking={setThinking}
+          />
+          <Submit onClick={onSubmit} />
         </div>
       </div>
     </div>

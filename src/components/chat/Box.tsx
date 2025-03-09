@@ -1,8 +1,8 @@
-import MessageBox from "@/components/chat/MessageBox";
+import MessageBox, { MessageProps } from "@/components/chat/MessageBox";
 import Input from "@/components/chat/Input";
 
 import { createStyles } from "antd-style";
-
+import { useState } from "react";
 const useStyles = createStyles(({ css }) => ({
   container: css`
     height: 100%;
@@ -24,13 +24,16 @@ const useStyles = createStyles(({ css }) => ({
 
 const Box = () => {
   const { styles } = useStyles();
+
+  const [messages, setMessages] = useState<MessageProps[]>([]);
+
   return (
     <>
       <div className={styles.container}>
-        <MessageBox />
+        <MessageBox messages={messages} />
       </div>
       <div className={styles.inputContainer}>
-        <Input />
+        <Input setMessages={setMessages} />
       </div>
     </>
   );

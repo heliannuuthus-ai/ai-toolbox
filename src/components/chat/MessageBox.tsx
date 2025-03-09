@@ -6,7 +6,7 @@ import Edit from "@/assets/images/button/edit.svg?react";
 import Icon from "@ant-design/icons";
 
 export interface MessageProps {
-  id: number;
+  id: string;
   role: MessageRole;
   content: string;
 }
@@ -134,50 +134,7 @@ const useStyle = createStyles(({ css, token, cx }) => {
   };
 });
 
-// 模拟聊天数据
-const messages: MessageProps[] = [
-  {
-    id: 1,
-    role: MessageRole.USER,
-    content: "你好",
-  },
-  {
-    id: 2,
-    role: MessageRole.ASSISTANT,
-    content: "你好！今天有什么可以帮你的吗？😊",
-  },
-  {
-    id: 3,
-    role: MessageRole.ASSISTANT,
-    content: "当然，是暂停吗！😊",
-  },
-  {
-    id: 4,
-    role: MessageRole.USER,
-    content:
-      "我短时间内不会用 AI 你能112313123123不能有个暂停的路线1111231111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-  },
-  {
-    id: 5,
-    role: MessageRole.USER,
-    content:
-      "我短时间内不会用 AI 你能112313123123不能有个暂停的路线1111231111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-  },
-  {
-    id: 6,
-    role: MessageRole.ASSISTANT,
-    content:
-      "我短时间内不会用 AI 你能112313123123不能有个暂停的路线1111231111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-  },
-  {
-    id: 7,
-    role: MessageRole.USER,
-    content:
-      "我短时间内不会用 AI 你能112313123123不能有个暂停的路线1111231111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-  },
-];
-
-const MessageBox = () => {
+const MessageBox = ({ messages }: { messages: MessageProps[] }) => {
   const { styles } = useStyle();
 
   return (

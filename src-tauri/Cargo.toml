@@ -23,6 +23,7 @@ tauri = { version = "2", features = [
   "image-png",
   "image-ico",
 ] }
+glib = "0.20.0"
 tauri-plugin-opener = "2"
 tauri-plugin-dialog = "2.2.0"
 tauri-plugin-window-state = "2.0.0"
@@ -43,8 +44,6 @@ tracing-appender = "0.2.3"
 parking_lot = { version = "0.12.3", features = ["arc_lock"] }
 
 
-[target.'cfg(target_os = "linux")'.dependencies]
-users = "0.11.0"
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-autostart = "2.2.0"
@@ -56,7 +55,7 @@ tauri-plugin-window-state = "2.2.1"
 [dev-dependencies]
 mockito = "1.7.0"
 tempfile = "3.18.0"
-
+glib = "0.20.0"
 
 [profile.release]
 panic = "abort"

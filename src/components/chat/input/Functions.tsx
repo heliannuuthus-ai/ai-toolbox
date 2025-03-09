@@ -3,8 +3,8 @@ import Icon from "@ant-design/icons";
 import LightOn from "@/assets/images/button/light-on.svg?react";
 import LightOff from "@/assets/images/button/light-off.svg?react";
 import { createStyles } from "antd-style";
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
+import { getModels, Model } from "@/apis/external";
 const useStyles = createStyles(({ css }) => ({
   container: css`
     display: flex;
@@ -32,6 +32,16 @@ const useStyles = createStyles(({ css }) => ({
 const Functions = () => {
   const [selectedThink, setSelectedThink] = useState<boolean>(false);
   const { styles } = useStyles();
+
+  const [models, setModels] = useState<Model[]>([]);
+
+  useEffect(() => {
+    getModels().then((res) => {
+      console.log(res);
+      setModels(() => res.data.result);
+    });
+  }, []);
+
   return (
     <div className={styles.container}>
       <div className={styles.buttons}>
@@ -53,7 +63,13 @@ const Functions = () => {
           思考
         </Button>
       </div>
-      <Select style={{ height: "36px", borderRadius: "9999px" }} />
+      <Select
+        style={{ height: "36px", borderRadius: "9999px" }}
+        options={models.map((model) => ({
+          label: model.name,
+          value: model.name,
+        }))}
+      />
     </div>
   );
 };

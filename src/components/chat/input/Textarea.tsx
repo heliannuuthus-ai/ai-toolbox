@@ -1,6 +1,5 @@
 import { ConfigProvider, Flex, Input } from "antd";
 import { createStyles } from "antd-style";
-import { useState } from "react";
 
 const { TextArea: AntdTextArea } = Input;
 
@@ -35,9 +34,16 @@ const useStyles = createStyles(({ css }) => ({
     display: none;
   `,
 }));
-export const Textarea = () => {
-  const [message, setMessage] = useState<string>("");
 
+export const Textarea = ({
+  message,
+  setMessage,
+  onSubmit,
+}: {
+  message: string;
+  setMessage: (message: string) => void;
+  onSubmit: () => void;
+}) => {
   const { styles } = useStyles();
   return (
     <Flex className={styles.container} align="center" vertical>
@@ -62,6 +68,7 @@ export const Textarea = () => {
             placeholder="想向 wikipedia 了解什么？"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
+            onPressEnter={onSubmit}
           />
         </ConfigProvider>
       </div>

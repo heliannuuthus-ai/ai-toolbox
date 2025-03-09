@@ -2,7 +2,7 @@ import { Button } from "antd";
 import Arrow from "@/assets/images/button/arrow.svg?react";
 import Icon from "@ant-design/icons";
 
-const Submit = () => {
+const Submit = ({ onClick }: { onClick: () => void }) => {
   return (
     <Button
       style={{
@@ -12,6 +12,7 @@ const Submit = () => {
       }}
       shape="circle"
       icon={<Icon component={Arrow} />}
+      onClick={onClick}
     />
   );
 };

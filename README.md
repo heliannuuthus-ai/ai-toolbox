@@ -1,7 +1,7 @@
-# Tauri + React + Typescript
+# AI 工具箱
 
-This template should help get you started developing with Tauri, React and Typescript in Vite.
+> 一个基于大语言模型的工具箱，支持自然语言提问，实时响应用户查询，多轮对话能力，上下文理解和记忆。
 
-## Recommended IDE Setup
+## 🌟 核心功能
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+- wikipedia 查询核心关键词，利用固定 glossary 格式输出（[博客](https://site.heliannuuthus.com)使用）。

@@ -26,5 +26,5 @@
       "@root/*": ["./*"]
     }
   },
-  "include": ["src"],
+  "include": ["src"]
 }

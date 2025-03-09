@@ -8,7 +8,6 @@ use tauri_plugin_global_shortcut::{Code, GlobalShortcutExt, ShortcutState};
 use tracing::{error, info};
 #[allow(dead_code)]
 pub struct Hotkey {
-    
     current: Arc<Mutex<Vec<String>>>, // 保存当前的热键设置
 }
 
@@ -73,23 +72,28 @@ impl Hotkey {
         };
 
         let quit = func.trim() == "quit";
-
+        info!("Registering hotkey: {}, func: {}", hotkey, quit);
         let _ = shortcut.on_shortcut(hotkey, move |app_handle, hotkey, event| {
             if event.state == ShortcutState::Pressed {
-                if hotkey.key == Code::KeyQ && quit {
-                    if let Some(window) = app_handle.get_webview_window("main") {
-                        if window.is_focused().unwrap_or(false) {
-                            info!("Executing quit");
-                            f();
-                        }
-                    }
-                } else {
-                    if let Some(window) = app_handle.get_webview_window("main") {
-                        if window.is_focused().unwrap_or(false)
-                            && window.is_visible().unwrap_or(false)
-                        {
-                            f();
-                        }
+                info!("Pressed hotkey: {}", hotkey.key);
+                if let Some(window) = app_handle.get_webview_window("main") {
+                    if Code::KeyQ.eq(&hotkey.key) && quit {
+                        // 发现调用 window 的方法会阻塞主线程，所以需要使用线程来调用
+                        std::thread::spawn(move || {
+                            if window.is_focused().unwrap_or(false) {
+                                info!("Executing quit");
+                                f();
+                            }
+                        });
+                    } else {
+                        std::thread::spawn(move || {
+                            if window.is_focused().unwrap_or(false)
+                                && window.is_visible().unwrap_or(false)
+                            {
+                                info!("Executing function");
+                                f();
+                            }
+                        });
                     }
                 }
             }

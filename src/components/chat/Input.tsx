@@ -1,146 +1,196 @@
-import { createStyles } from "antd-style";
-import TextArea from "@/components/chat/input/Textarea";
+import { getModels, wikipedia } from "@/apis/wikipedia";
 import Functions from "@/components/chat/input/Functions";
+import Play from "@/assets/images/button/play.svg?react";
+import Pause from "@/assets/images/button/pause.svg?react";
+import TextArea from "@/components/chat/input/Textarea";
 import Upload from "@/components/chat/input/Upload";
-import Submit from "@/components/chat/input/Submit";
-import { wikipedia, Model, getModels } from "@/apis/wikipedia";
 import { MessageProps, MessageRole } from "@/components/chat/MessageBox";
-import { useEffect, useState } from "react";
+import Icon from "@ant-design/icons";
+import { Button, Form } from "antd";
+import { createStyles } from "antd-style";
+import { useEffect, useRef, useState } from "react";
 const useStyles = createStyles(({ css, token }) => ({
-	container: css`
-		position: relative;
-		padding-bottom: 1rem;
-		padding-left: 0.5rem;
-		padding-right: 0.5rem;
-	`,
-	form: css`
-		position: relative;
-		border-radius: 1.5rem;
-		background-color: var(--background-color);
-		box-shadow: ${token.boxShadow};
-	`,
-	textarea: css`
-		padding-bottom: 3rem;
-		padding-left: 0.5rem;
-		padding-right: 0.5rem;
-	`,
-	buttons: css`
-		max-width: 100%;
-		border-color: transparent;
-		border-width: 2px;
-		padding: 0.75rem;
-		position: absolute;
-		gap: 0.375rem;
-		display: flex;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		button {
-			height: 36px;
-		}
-	`,
+  container: css`
+    position: relative;
+    padding-bottom: 1rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  `,
+  form: css`
+    position: relative;
+    border-radius: 1.5rem;
+    background-color: var(--background-color);
+    box-shadow: ${token.boxShadow};
+  `,
+  textarea: css`
+    padding-bottom: 3rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  `,
+  buttons: css`
+    max-width: 100%;
+    border-color: transparent;
+    border-width: 2px;
+    padding: 0.75rem;
+    position: absolute;
+    gap: 0.375rem;
+    display: flex;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    button {
+      height: 36px;
+    }
+  `,
 }));
 
 const Input = ({
-	setMessages,
+  setMessages,
 }: {
-	setMessages: (
-		messageCreator: (prevMessages: MessageProps[]) => MessageProps[]
-	) => void;
+  setMessages: (
+    messageCreator: (prevMessages: MessageProps[]) => MessageProps[]
+  ) => void;
 }) => {
-	const [models, setModels] = useState<Record<string, Model>>({});
-	const { styles } = useStyles();
-	const [model, setModel] = useState<string>("");
-	const [thinking, setThinking] = useState<boolean>(false);
-	const [message, setMessage] = useState<string>("");
-	const [image, setImage] = useState<File | null>(null);
+  const initialLocalValues = {
+    message: "",
+    model: "deepseek",
+    image: null,
+    thinking: false,
+    models: {},
+  };
+  const abort = useRef<AbortController | null>(null);
+  const [generating, setGenerating] = useState(false);
+  const [form] = Form.useForm();
 
-	const selectMode = (model: string): string => {
-		if (thinking) {
-			return models[model].reasoner_model;
-		}
-		return models[model].chat_model;
-	};
+  const { styles } = useStyles();
 
-	const onSubmit = async () => {
-		if (message.trim() === "") {
-			return;
-		}
+  const selectModel = (): string => {
+    const { model, models, thinking } = form.getFieldsValue([
+      "model",
+      "models",
+      "thinking",
+    ]);
+    if (thinking) {
+      return models[model].reasoner_model;
+    }
+    return models[model].chat_model;
+  };
 
-		const randomId = Date.now();
-		setMessages((prev) => [
-			...prev,
-			{
-				id: randomId.toString(),
-				role: MessageRole.USER,
-				content: message,
-			},
-		]);
-		setMessage("");
+  const onFinish = async (_: any) => {
+    const { message, model, image } = form.getFieldsValue(true);
+    if (message.trim() === "" || generating) {
+      return;
+    }
+    abort.current = new AbortController();
+    const randomId = Date.now();
 
-		const assistantMessageId = (randomId + 1).toString(); // 确保 ID 唯一
-		setMessages((prev) => [
-			...prev,
-			{
-				id: assistantMessageId,
-				role: MessageRole.ASSISTANT,
-				content: "",
-			},
-		]);
-		await wikipedia(
-			model,
-			selectMode(model),
-			message,
-			image,
-			(responseText) => {
-				setMessages((prevMessages) => {
-					const lastAssistantMessageIndex = prevMessages.findIndex(
-						(msg) => msg.id === assistantMessageId
-					);
-					if (lastAssistantMessageIndex === -1) return prevMessages;
-					console.log("responseText ====", responseText);
-					const newMessages = [...prevMessages];
-					newMessages[lastAssistantMessageIndex] = {
-						...newMessages[lastAssistantMessageIndex],
-						content: responseText,
-					};
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: randomId.toString(),
+        role: MessageRole.USER,
+        content: message,
+      },
+    ]);
 
-					return newMessages;
-				});
-			}
-		);
-	};
+    form.setFieldValue("message", "");
+    setGenerating(true);
+    const assistantMessageId = (randomId + 1).toString(); // 确保 ID 唯一
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: assistantMessageId,
+        role: MessageRole.ASSISTANT,
+        content: "",
+      },
+    ]);
+    try {
+      await wikipedia(
+        model,
+        selectModel(),
+        message,
+        image,
+        (resp) => {
+          setMessages((prevMessages) => {
+            const lastId = prevMessages.findIndex(
+              (msg) => msg.id === assistantMessageId
+            );
+            if (lastId === -1) return prevMessages;
+            const messages = [...prevMessages];
+            messages[lastId] = {
+              ...messages[lastId],
+              content: resp,
+            };
+            return messages;
+          });
+        },
+        abort.current.signal
+      );
+    } catch (error: any) {
+      console.log(error);
+    } finally {
+      abort.current = null;
+    }
+  };
 
-	useEffect(() => {
-		getModels().then((res) => {
-			setModels(res.data);
-		});
-	}, []);
+  const abortGenerating = () => {
+    abort.current?.abort();
+    abort.current = null;
+    setGenerating(false);
+  };
 
-	return (
-		<div className={styles.container}>
-			<div className={styles.form}>
-				<div className={styles.textarea}>
-					<TextArea
-						message={message}
-						setMessage={setMessage}
-						onSubmit={onSubmit}
-					/>
-				</div>
-				<div className={styles.buttons}>
-					<Upload setImage={setImage} />
-					<Functions
-						model={model}
-						setModel={setModel}
-						models={models}
-						thinking={thinking}
-						setThinking={setThinking}
-					/>
-					<Submit onClick={onSubmit} />
-				</div>
-			</div>
-		</div>
-	);
+  useEffect(() => {
+    getModels().then((res) => {
+      form.setFieldsValue({
+        ...initialLocalValues,
+        model: Object.keys(res.data)[0],
+        models: res.data,
+      });
+    });
+  }, []);
+
+  return (
+    <div className={styles.container}>
+      <Form
+        form={form}
+        className={styles.form}
+        onFinish={onFinish}
+        initialValues={initialLocalValues}
+      >
+        <div className={styles.textarea}>
+          <Form.Item noStyle name="message">
+            <TextArea />
+          </Form.Item>
+        </div>
+        <div className={styles.buttons}>
+          <Form.Item noStyle name="image" valuePropName="fileList">
+            <Upload />
+          </Form.Item>
+          <Form.Item noStyle name="model">
+            <Functions />
+          </Form.Item>
+          <Form.Item noStyle label={null}>
+            <Button
+              style={{
+                minWidth: "36px",
+                minHeight: "36px",
+                fontSize: "20px",
+              }}
+              onClick={() => {
+                if (generating) {
+                  abortGenerating();
+                  return;
+                }
+                form.submit();
+              }}
+              shape="circle"
+              icon={<Icon component={generating ? Pause : Play} />}
+            />
+          </Form.Item>
+        </div>
+      </Form>
+    </div>
+  );
 };
 
 export default Input;

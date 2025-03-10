@@ -1,43 +1,40 @@
 import { useEffect, useState } from "react";
-import { Model } from "@/apis/wikipedia";
-import { Select as AntdSelect, SelectProps } from "antd";
+import { Select as AntdSelect, Form, SelectProps } from "antd";
 
 const Select = ({
-	model,
-	setModel,
-	models,
+  value,
+  onChange,
 }: {
-	model: string;
-	models: Record<string, Model>;
-	setModel: (model: string) => void;
+  value?: string;
+  onChange?: (value: string) => void;
 }) => {
-	const [options, setOptions] = useState<SelectProps["options"]>([]);
+  const [options, setOptions] = useState<SelectProps["options"]>([]);
 
-	useEffect(() => {
-		setOptions(
-			Object.keys(models).map((key) => ({
-				label: key,
-				value: key,
-			}))
-		);
-		setModel(Object.keys(models)[0]);
-	}, [models]);
+  const form = Form.useFormInstance();
+  const models = Form.useWatch("models", { form, preserve: true });
 
-	return (
-		<AntdSelect
-			style={{
-				minWidth: "200px",
-				height: "36px",
-				maxWidth: "300px",
-				borderRadius: "9999px",
-			}}
-			options={options}
-			value={model}
-			onChange={(value) => {
-				setModel(value);
-			}}
-		/>
-	);
+  useEffect(() => {
+    setOptions(
+      Object.keys(models || {}).map((key) => ({
+        label: key,
+        value: key,
+      })),
+    );
+  }, [models]);
+
+  return (
+    <AntdSelect
+      style={{
+        minWidth: "200px",
+        height: "36px",
+        maxWidth: "300px",
+        borderRadius: "9999px",
+      }}
+      options={options}
+      value={value}
+      onChange={onChange}
+    />
+  );
 };
 
 export default Select;

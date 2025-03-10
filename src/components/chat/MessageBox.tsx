@@ -4,7 +4,6 @@ import Markdown from "react-markdown";
 import Copy from "@/assets/images/button/copy.svg?react";
 import Edit from "@/assets/images/button/edit.svg?react";
 import Icon from "@ant-design/icons";
-
 export interface MessageProps {
   id: string;
   role: MessageRole;

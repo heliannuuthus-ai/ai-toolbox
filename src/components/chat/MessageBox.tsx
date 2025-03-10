@@ -52,7 +52,6 @@ const useStyle = createStyles(({ css, token, cx }) => {
       padding: 20px;
       max-width: 50rem;
       background: ${token.colorBgContainer};
-      height: 100%;
       p {
         margin: 0;
       }

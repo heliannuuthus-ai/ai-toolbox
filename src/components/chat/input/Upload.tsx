@@ -1,31 +1,35 @@
-import { Button, UploadFile } from "antd";
-import type { UploadChangeParam } from "antd/es/upload/interface";
+import { Button, Form } from "antd";
+import type { UploadProps } from "antd/es/upload/interface";
 import Icon from "@ant-design/icons";
 import Link from "@/assets/images/button/link.svg?react";
 import { Upload as AntdUpload } from "antd";
+import { useEffect } from "react";
+const Upload = ({ ...props }: UploadProps) => {
+  const form = Form.useFormInstance();
+  const model = Form.useWatch("model", form);
+  const models = Form.useWatch("models", { form, preserve: true });
 
-const Upload = ({ setImage }: { setImage: (image: File | null) => void }) => {
-  const upload = (info: UploadChangeParam<UploadFile<any>>) => {
-    if (info.file.status !== "uploading") {
-      setImage(info.file.originFileObj as File);
-    }
-  };
+  useEffect(() => {}, [models]);
 
   return (
-    <AntdUpload
-      children={
-        <Button
-          style={{
-            minWidth: "36px",
-            minHeight: "36px",
-            fontSize: "20px",
-          }}
-          shape="circle"
-          icon={<Icon style={{ fontSize: "20px" }} component={Link} />}
-        />
-      }
-      onChange={upload}
-    />
+    models &&
+    models[model] &&
+    models[model].image_to_text_model && (
+      <AntdUpload
+        children={
+          <Button
+            style={{
+              minWidth: "36px",
+              minHeight: "36px",
+              fontSize: "20px",
+            }}
+            shape="circle"
+            icon={<Icon style={{ fontSize: "20px" }} component={Link} />}
+          />
+        }
+        {...props}
+      />
+    )
   );
 };
 

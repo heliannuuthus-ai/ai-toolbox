@@ -2,7 +2,7 @@ import MessageBox, { MessageProps } from "@/components/chat/MessageBox";
 import Input from "@/components/chat/Input";
 
 import { createStyles } from "antd-style";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 const useStyles = createStyles(({ css }) => ({
   container: css`
     height: 100%;
@@ -10,6 +10,11 @@ const useStyles = createStyles(({ css }) => ({
     display: flex;
     align-items: center;
     flex-direction: column;
+    scroll-behavior: smooth;
+  `,
+  messageContainer: css`
+    width: 100%;
+    max-width: 50rem;
   `,
   inputContainer: css`
     position: absolute;
@@ -24,13 +29,28 @@ const useStyles = createStyles(({ css }) => ({
 
 const Box = () => {
   const { styles } = useStyles();
-
+  const containerRef = useRef<HTMLDivElement>(null);
+  const messageContainerRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<MessageProps[]>([]);
+
+  useEffect(() => {
+    if (!messageContainerRef.current) return;
+    const resizeObserver = new ResizeObserver(() => {
+      if (containerRef.current) {
+        containerRef.current.scrollTop = containerRef.current.scrollHeight;
+      }
+    });
+    resizeObserver.observe(messageContainerRef.current);
+    return () => resizeObserver.disconnect();
+  }, []);
 
   return (
     <>
-      <div className={styles.container}>
-        <MessageBox messages={messages} />
+      <div className={styles.container} ref={containerRef}>
+        <div className={styles.messageContainer} ref={messageContainerRef}>
+          <MessageBox messages={messages} />
+          <div style={{ paddingBottom: "144px" }}></div>
+        </div>
       </div>
       <div className={styles.inputContainer}>
         <Input setMessages={setMessages} />

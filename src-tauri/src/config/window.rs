@@ -1,7 +1,13 @@
 use crate::core::handler::Handler;
-use tauri::{image::Image, AppHandle, Manager};
+use tauri::{AppHandle, Manager};
 use tauri_plugin_window_state::{AppHandleExt, StateFlags};
 use tracing::{error, info};
+
+#[cfg(target_os = "macos")]
+use crate::AppManager;
+
+#[cfg(target_os = "linux")]
+use tauri::image::Image;
 
 pub fn create() {
     info!("Starting to create window");

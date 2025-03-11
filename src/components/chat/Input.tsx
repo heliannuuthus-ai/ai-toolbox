@@ -2,11 +2,12 @@ import { getModels, wikipedia } from "@/apis/wikipedia";
 import Functions from "@/components/chat/input/Functions";
 import TextArea from "@/components/chat/input/Textarea";
 import Upload from "@/components/chat/input/Upload";
-import { MessageProps, MessageRole } from "@/components/chat/MessageBox";
+import { MessageProps, MessageRole } from "@/components/chat/message";
 import { Form } from "antd";
 import { createStyles } from "antd-style";
 import { useEffect, useRef, useState } from "react";
-import Submit from "./input/Submit";
+import Submit from "@/components/chat/input/Submit";
+
 const useStyles = createStyles(({ css, token }) => ({
 	container: css`
 		position: relative;

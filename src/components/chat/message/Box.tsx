@@ -1,10 +1,8 @@
 import { createStyles } from "antd-style";
-import { Button, Spin } from "antd";
 import { BouncingDots } from "@/components/spin";
 import Markdown from "react-markdown";
-import Copy from "@/assets/images/button/copy.svg?react";
-import Edit from "@/assets/images/button/edit.svg?react";
-import Icon from "@ant-design/icons";
+import Copy from "@/components/chat/message/Copy";
+import Edit from "@/components/chat/message/Edit";
 export interface MessageProps {
 	id: string;
 	role: MessageRole;
@@ -134,7 +132,7 @@ const useStyle = createStyles(({ css, token, cx }) => {
 	};
 });
 
-const MessageBox = ({ messages }: { messages: MessageProps[] }) => {
+const Box = ({ messages }: { messages: MessageProps[] }) => {
 	const { styles } = useStyle();
 
 	return (
@@ -174,28 +172,10 @@ const Buttons = ({ message }: { message: MessageProps }) => {
 	const { styles } = useStyle();
 	return (
 		<div className={styles.replyButton}>
-			<Button
-				className={
-					message.role === MessageRole.USER
-						? `${styles.userReplyButton}`
-						: `${styles.aiReplyButton}`
-				}
-				shape="circle"
-				type="text"
-				icon={<Icon component={Copy} />}
-			/>
-			<Button
-				className={
-					message.role === MessageRole.USER
-						? `${styles.userReplyButton}`
-						: `${styles.aiReplyButton}`
-				}
-				shape="circle"
-				type="text"
-				icon={<Icon component={Edit} />}
-			/>
+			<Copy message={message} />
+			<Edit message={message} />
 		</div>
 	);
 };
 
-export default MessageBox;
+export default Box;

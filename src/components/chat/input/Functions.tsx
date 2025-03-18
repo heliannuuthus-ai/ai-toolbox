@@ -3,8 +3,7 @@ import LightOn from "@/assets/images/button/light-on.svg?react";
 import Icon from "@ant-design/icons";
 import { Button, Form } from "antd";
 import { createStyles } from "antd-style";
-import Select from "@/components/chat/input/Select";
-import { useEffect } from "react";
+import { ReactNode } from "react";
 const useStyles = createStyles(({ css }) => ({
   container: css`
     display: flex;
@@ -32,13 +31,19 @@ const useStyles = createStyles(({ css }) => ({
 const Thinking = ({
   checked,
   onChange,
+  onThinkingChange,
 }: {
   checked?: boolean;
   onChange?: (checked: boolean) => void;
+  onThinkingChange: (thinking: boolean) => void;
 }) => {
   return (
     <Button
-      onClick={() => onChange?.(!checked)}
+      onClick={() => {
+        const thinking = !checked;
+        onChange?.(thinking);
+        onThinkingChange(thinking);
+      }}
       variant={checked ? "filled" : "outlined"}
       color="default"
       icon={
@@ -47,6 +52,7 @@ const Thinking = ({
             fontSize: "20px",
             display: "flex",
             alignItems: "center",
+            borderRadius: "9999px",
           }}
           component={checked ? LightOn : LightOff}
         />
@@ -57,27 +63,33 @@ const Thinking = ({
   );
 };
 
-const Functions = () => {
+const Functions = ({
+  onThinkingChange,
+  extras,
+}: {
+  onThinkingChange: (thinking: boolean) => void;
+  extras?: Record<string, { valuePropName?: string; children: ReactNode }>;
+}) => {
   const { styles } = useStyles();
-
-  const form = Form.useFormInstance();
-  const model = Form.useWatch("model", form);
-  const models = Form.useWatch("models", { form, preserve: true });
-
-  useEffect(() => {}, [models]);
 
   return (
     <div className={styles.container}>
-      {models && models[model] && models[model].reasoner_model != "" && (
-        <div className={styles.buttons}>
-          <Form.Item noStyle valuePropName="checked" name="thinking">
-            <Thinking />
+      <div className={styles.buttons}>
+        <Form.Item noStyle valuePropName="checked" name="thinking">
+          <Thinking onThinkingChange={onThinkingChange} />
+        </Form.Item>
+      </div>
+      {extras &&
+        Object.entries(extras).map(([name, props]) => (
+          <Form.Item
+            key={name}
+            noStyle
+            name={name}
+            valuePropName={props.valuePropName}
+          >
+            {props.children}
           </Form.Item>
-        </div>
-      )}
-      <Form.Item noStyle name="model">
-        <Select />
-      </Form.Item>
+        ))}
     </div>
   );
 };

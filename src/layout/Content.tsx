@@ -1,6 +1,6 @@
-import ChatBox from "@/components/chat/Box";
 import { createStyles } from "antd-style";
 import { Layout } from "antd";
+import Glossary from "@/pages/Glossary";
 const { Content: AntContent } = Layout;
 
 const useStyles = createStyles(({ css }) => ({
@@ -18,7 +18,7 @@ const Content = () => {
   const { styles } = useStyles();
   return (
     <AntContent className={styles.content}>
-      <ChatBox />
+      <Glossary />
     </AntContent>
   );
 };

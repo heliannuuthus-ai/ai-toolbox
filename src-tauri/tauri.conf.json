@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "heliannuuthus ai ui",
+  "productName": "ai-toolbox",
   "version": "0.1.0",
-  "identifier": "com.heliannuuthus.ai.ui",
+  "identifier": "com.heliannuuthus.ai.ai-toolbox",
   "build": {
     "beforeDevCommand": "pnpm run web:dev",
     "devUrl": "http://localhost:3000",
@@ -31,7 +31,6 @@
     "resources": [],
     "publisher": "annuus artificial intelligence kit",
     "category": "DeveloperTool",
-    "shortDescription": "Annuus Artificial Intelligence Kit",
-    "createUpdaterArtifacts": true
+    "shortDescription": "Annuus Artificial Intelligence Kit"
   }
 }

@@ -1,5 +1,3 @@
-import Box, { MessageProps, MessageRole } from "@/components/chat/box/Box";
+import Box from "@/components/chat/box/Box";
 
-export { Box, MessageRole };
-
-export type { MessageProps };
+export { Box };

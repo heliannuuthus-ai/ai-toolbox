@@ -1,12 +1,11 @@
 import { Button, ButtonProps } from "antd";
 import Icon from "@ant-design/icons";
 import EditIcon from "@/assets/images/button/edit.svg?react";
-import { MessageProps } from "@/components/chat/box/Box";
-
+import { ChatMessage } from "@/apis/types";
 const Edit = ({
   message,
   ...props
-}: ButtonProps & { message: MessageProps }) => {
+}: ButtonProps & { message: ChatMessage }) => {
   return (
     <Button
       {...props}

@@ -16,6 +16,10 @@ export default defineConfig(async () => ({
       "@root": path.resolve("."),
     },
   },
+  build: {
+    outDir: "../dist",
+    emptyOutDir: true,
+  },
   define: {
     OS_PLATFORM: `"${process.platform}"`,
   },

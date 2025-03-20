@@ -1,6 +1,6 @@
-import { Box, MessageProps, MessageRole } from "@/components/chat/box";
+import { Box } from "@/components/chat/box";
 import Input from "@/components/chat/input";
-import { Feedback as FeedbackType } from "@/apis/types";
+import { ChatMessage, FeedbackType } from "@/apis/types";
 import { createStyles } from "antd-style";
 import { useEffect, useRef } from "react";
 const useStyles = createStyles(({ css }) => ({
@@ -29,19 +29,23 @@ const useStyles = createStyles(({ css }) => ({
 
 const Chat = ({
   generating,
+  placeholder,
   messages,
   onFeedback,
   onSubmit,
   onStop,
   onFilesChange,
+  onDeepSearchChange,
   onThinkingChange,
 }: {
   generating: boolean;
-  messages: MessageProps[];
-  onFeedback: (feedback: FeedbackType) => Promise<void>;
+  placeholder?: string;
+  messages: ChatMessage[];
+  onFeedback: (messageId: string, feedbackType: FeedbackType) => Promise<void>;
   onSubmit: (values: any) => Promise<void>;
   onStop: () => Promise<void>;
   onFilesChange: (files: File[]) => Promise<void>;
+  onDeepSearchChange: (deepSearch: boolean) => Promise<void>;
   onThinkingChange: (thinking: boolean) => Promise<void>;
 }) => {
   const { styles } = useStyles();
@@ -70,7 +74,14 @@ const Chat = ({
       <div className={styles.inputContainer}>
         <Input
           generating={generating}
+          components={{
+            textarea: {
+              placeholder,
+            },
+            upload: {},
+          }}
           onFilesChange={onFilesChange}
+          onDeepSearchChange={onDeepSearchChange}
           onThinkingChange={onThinkingChange}
           onStop={onStop}
           onSubmit={onSubmit}
@@ -81,5 +92,3 @@ const Chat = ({
 };
 
 export default Chat;
-
-export type { MessageProps, MessageRole };

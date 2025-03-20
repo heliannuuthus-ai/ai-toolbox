@@ -1,11 +1,11 @@
-import Functions from "@/components/chat/input/Functions";
-import TextArea from "@/components/chat/input/Textarea";
+import Buttons from "@/components/chat/input/buttons";
+import Textarea from "@/components/chat/input/Textarea";
 import Upload from "@/components/chat/input/Upload";
-import { Form } from "antd";
+import { ButtonProps, Form, UploadProps } from "antd";
 import { createStyles } from "antd-style";
 import { useEffect } from "react";
 import Submit from "@/components/chat/input/Submit";
-
+import { TextAreaProps } from "antd/es/input";
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
     position: relative;
@@ -41,18 +41,48 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
+export interface ChatInputProps {
+  generating: boolean;
+  placeholder?: string;
+  onFilesChange: (files: File[]) => Promise<void>;
+  onThinkingChange: (thinking: boolean) => Promise<void>;
+  onDeepSearchChange: (deepSearch: boolean) => Promise<void>;
+  onStop: () => Promise<void>;
+  onSubmit: (values: any) => Promise<void>;
+  components?: ChatInputComponents;
+}
+
+export interface ChatInputComponents {
+  buttons?: React.ReactNode;
+  textarea?: TextAreaProps;
+  upload?: ChatInputUploadProps;
+  submit?: React.ReactNode;
+}
+
+export interface ChatInputUploadProps extends UploadProps {
+  button?: ButtonProps;
+}
+
+export interface ChatInputSubmitProps  {
+  
+}
+
 const Input = ({
   generating,
   onFilesChange,
   onThinkingChange,
+  onDeepSearchChange,
   onStop,
   onSubmit,
+  components,
 }: {
   generating: boolean;
   onFilesChange: (files: File[]) => Promise<void>;
   onThinkingChange: (thinking: boolean) => Promise<void>;
+  onDeepSearchChange: (deepSearch: boolean) => Promise<void>;
   onStop: () => Promise<void>;
   onSubmit: (values: any) => Promise<void>;
+  components?: ChatInputComponents;
 }) => {
   const initialLocalValues = {
     message: "",
@@ -83,18 +113,18 @@ const Input = ({
       >
         <div className={styles.textarea}>
           <Form.Item noStyle name="message">
-            <TextArea />
+            <Textarea {...components?.textarea} />
           </Form.Item>
         </div>
         <div className={styles.buttons}>
           <Form.Item noStyle name="files" valuePropName="fileList">
-            <Upload
-              button={{ children: "上传图文" }}
-              onFilesChange={onFilesChange}
-            />
+            <Upload onFilesChange={onFilesChange} {...components?.upload} />
           </Form.Item>
           <Form.Item noStyle>
-            <Functions onThinkingChange={onThinkingChange} />
+            <Buttons
+              onDeepSearchChange={onDeepSearchChange}
+              onThinkingChange={onThinkingChange}
+            />
           </Form.Item>
           <Form.Item noStyle label={null}>
             <Submit

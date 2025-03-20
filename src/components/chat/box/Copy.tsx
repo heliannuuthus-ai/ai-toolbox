@@ -1,15 +1,14 @@
 import { Button, ButtonProps } from "antd";
-import { MessageProps } from "@/components/chat/box/Box";
 import Icon from "@ant-design/icons";
 import CopyIcon from "@/assets/images/button/copy.svg?react";
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import HookIcon from "@/assets/images/button/hook.svg?react";
 import { useState } from "react";
-
+import { ChatMessage } from "@/apis/types";
 const Copy = ({
   message,
   ...props
-}: ButtonProps & { message: MessageProps }) => {
+}: ButtonProps & { message: ChatMessage }) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {

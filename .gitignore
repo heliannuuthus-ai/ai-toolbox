@@ -53,3 +53,6 @@ pids
 .idea
 debug.log
 TODO.md
+
+**/dist
+**/build

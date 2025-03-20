@@ -1,26 +1,22 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "identifier": "com.heliannuuthus.ai.ui",
+  "identifier": "com.heliannuuthus.ai.ai-toolbox",
   "bundle": {
     "targets": ["deb", "rpm"],
     "linux": {
       "deb": {
         "depends": ["openssl"],
-        "desktopTemplate": "./packages/linux/heliannuuthus-ai-ui.desktop",
-        "provides": ["heliannuuthus-ai-ui"],
-        "conflicts": ["heliannuuthus-ai-ui"],
-        "replaces": ["heliannuuthus-ai-ui"],
-        "postInstallScript": "./packages/linux/post-install.sh",
-        "preRemoveScript": "./packages/linux/pre-remove.sh"
+        "desktopTemplate": "./packages/linux/ai-toolbox.desktop",
+        "provides": ["ai-toolbox"],
+        "conflicts": ["ai-toolbox"],
+        "replaces": ["ai-toolbox"]
       },
       "rpm": {
         "depends": ["openssl"],
-        "desktopTemplate": "./packages/linux/heliannuuthus-ai-ui.desktop",
-        "provides": ["heliannuuthus-ai-ui"],
-        "conflicts": ["heliannuuthus-ai-ui"],
-        "obsoletes": ["heliannuuthus-ai-ui"],
-        "postInstallScript": "./packages/linux/post-install.sh",
-        "preRemoveScript": "./packages/linux/pre-remove.sh"
+        "desktopTemplate": "./packages/linux/ai-toolbox.desktop",
+        "provides": ["ai-toolbox"],
+        "conflicts": ["ai-toolbox"],
+        "obsoletes": ["ai-toolbox"]
       }
     },
     "icon": [

@@ -1,9 +1,9 @@
-import LightOff from "@/assets/images/button/light-off.svg?react";
-import LightOn from "@/assets/images/button/light-on.svg?react";
-import Icon from "@ant-design/icons";
-import { Button, Form } from "antd";
+import { Form } from "antd";
 import { createStyles } from "antd-style";
 import { ReactNode } from "react";
+import Thinking from "@/components/chat/input/buttons/Thinking";
+import DeepSearch from "@/components/chat/input/buttons/DeepSearch";
+
 const useStyles = createStyles(({ css }) => ({
   container: css`
     display: flex;
@@ -28,55 +28,39 @@ const useStyles = createStyles(({ css }) => ({
   `,
 }));
 
-const Thinking = ({
-  checked,
-  onChange,
+const Buttons = ({
   onThinkingChange,
-}: {
-  checked?: boolean;
-  onChange?: (checked: boolean) => void;
-  onThinkingChange: (thinking: boolean) => void;
-}) => {
-  return (
-    <Button
-      onClick={() => {
-        const thinking = !checked;
-        onChange?.(thinking);
-        onThinkingChange(thinking);
-      }}
-      variant={checked ? "filled" : "outlined"}
-      color="default"
-      icon={
-        <Icon
-          style={{
-            fontSize: "20px",
-            display: "flex",
-            alignItems: "center",
-            borderRadius: "9999px",
-          }}
-          component={checked ? LightOn : LightOff}
-        />
-      }
-    >
-      思考
-    </Button>
-  );
-};
-
-const Functions = ({
-  onThinkingChange,
+  onDeepSearchChange,
   extras,
 }: {
   onThinkingChange: (thinking: boolean) => void;
+  onDeepSearchChange: (deepSearch: boolean) => void;
   extras?: Record<string, { valuePropName?: string; children: ReactNode }>;
 }) => {
   const { styles } = useStyles();
 
+  const form = Form.useFormInstance();
+
   return (
     <div className={styles.container}>
       <div className={styles.buttons}>
+        <Form.Item noStyle valuePropName="checked" name="deepsearch">
+          <DeepSearch
+            onDeepSearchChange={(deepSearch) => {
+              onDeepSearchChange(deepSearch);
+              onThinkingChange(false);
+              form.setFieldsValue({ thinking: false });
+            }}
+          />
+        </Form.Item>
         <Form.Item noStyle valuePropName="checked" name="thinking">
-          <Thinking onThinkingChange={onThinkingChange} />
+          <Thinking
+            onThinkingChange={(thinking) => {
+              onThinkingChange(thinking);
+              onDeepSearchChange(false);
+              form.setFieldsValue({ deepsearch: false });
+            }}
+          />
         </Form.Item>
       </div>
       {extras &&
@@ -94,4 +78,4 @@ const Functions = ({
   );
 };
 
-export default Functions;
+export default Buttons;

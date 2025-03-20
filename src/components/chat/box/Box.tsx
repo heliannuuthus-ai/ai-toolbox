@@ -6,22 +6,7 @@ import Edit from "@/components/chat/box/Edit";
 import Feedback from "@/components/chat/box/Feedback";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { Feedback as FeedbackType } from "@/apis/types";
-
-export interface MessageProps {
-  messageId: string;
-  taskId: string;
-  conversationId: string;
-  role: MessageRole;
-  content: string;
-  createdAt: number;
-  loading?: boolean;
-}
-
-export enum MessageRole {
-  USER = "user",
-  ASSISTANT = "assistant",
-}
+import { ChatMessage, FeedbackType, ChatRole } from "@/apis/types";
 
 // 定义样式
 const useStyle = createStyles(({ css, token, cx }) => {
@@ -144,8 +129,8 @@ const Box = ({
   messages,
   onFeedback,
 }: {
-  messages: MessageProps[];
-  onFeedback: (feedback: FeedbackType) => void;
+  messages: ChatMessage[];
+  onFeedback: (messageId: string, feedbackType: FeedbackType) => void;
 }) => {
   const { styles } = useStyle();
 
@@ -156,19 +141,19 @@ const Box = ({
           <div
             key={message.messageId}
             className={`${styles.message} ${
-              message.role === MessageRole.USER
+              message.role === ChatRole.USER
                 ? styles.userMessage
                 : styles.aiMessage
             }`}
           >
             <div
               className={`${
-                message.role === MessageRole.USER
+                message.role === ChatRole.USER
                   ? styles.userBubble
                   : styles.aiBubble
               }`}
             >
-              {message.loading ? (
+              {message.loading && message.content.length === 0 ? (
                 <BouncingDots />
               ) : (
                 <Markdown
@@ -209,13 +194,13 @@ const Buttons = ({
   message,
   onFeedback,
 }: {
-  message: MessageProps;
-  onFeedback: (feedback: FeedbackType) => void;
+  message: ChatMessage;
+  onFeedback: (messageId: string, feedbackType: FeedbackType) => void;
 }) => {
   const { styles } = useStyle();
 
   const className =
-    message.role === MessageRole.USER
+    message.role === ChatRole.USER
       ? `${styles.userReplyButton}`
       : `${styles.aiReplyButton}`;
 
@@ -223,14 +208,16 @@ const Buttons = ({
     <div className={styles.replyButton}>
       <Copy className={className} message={message} />
       <Edit className={className} message={message} />
-      {message.role === MessageRole.ASSISTANT && (
+      {message.role === ChatRole.ASSISTANT && (
         <>
           <Feedback.Dislike
             className={styles.aiReplyButton}
+            message={message}
             onFeedback={onFeedback}
           />
           <Feedback.Like
             className={styles.aiReplyButton}
+            message={message}
             onFeedback={onFeedback}
           />
         </>

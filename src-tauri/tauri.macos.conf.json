@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "identifier": "com.heliannuuthus.ai.ui",
-  "productName": "heliannuuthus ai ui",
+  "identifier": "com.heliannuuthus.ai.ai-toolbox",
+  "productName": "ai-toolbox",
   "bundle": {
     "targets": ["app", "dmg"],
     "macOS": {

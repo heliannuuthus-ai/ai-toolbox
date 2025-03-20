@@ -3,17 +3,21 @@ import LikeFilled from "@/assets/images/button/like-fill.svg?react";
 import LikeOutlined from "@/assets/images/button/like-outline.svg?react";
 import Icon from "@ant-design/icons";
 import { useState } from "react";
-import { Feedback } from "@/apis/types";
+import { ChatMessage, FeedbackType } from "@/apis/types";
 
 const Like = ({
+  message,
   onFeedback,
   ...props
-}: ButtonProps & { onFeedback: (feedback: Feedback) => void }) => {
+}: ButtonProps & {
+  message: ChatMessage;
+  onFeedback: (messageId: string, feedbackType: FeedbackType) => void;
+}) => {
   const [liked, setLiked] = useState(false);
   const onClick = () => {
-    const feedback = !liked ? Feedback.LIKE : Feedback.CANCEL;
+    const feedback = !liked ? FeedbackType.LIKE : FeedbackType.CANCEL;
     setLiked(!liked);
-    onFeedback(feedback);
+    onFeedback(message.messageId, feedback);
   };
 
   return (
@@ -28,14 +32,18 @@ const Like = ({
 };
 
 const Dislike = ({
+  message,
   onFeedback,
   ...props
-}: ButtonProps & { onFeedback: (feedback: Feedback) => void }) => {
+}: ButtonProps & {
+  message: ChatMessage;
+  onFeedback: (messageId: string, feedbackType: FeedbackType) => void;
+}) => {
   const [disliked, setDisliked] = useState(false);
   const onClick = () => {
-    const feedback = !disliked ? Feedback.DISLIKE : Feedback.CANCEL;
+    const feedback = !disliked ? FeedbackType.DISLIKE : FeedbackType.CANCEL;
     setDisliked(!disliked);
-    onFeedback(feedback);
+    onFeedback(message.messageId, feedback);
   };
   return (
     <Button

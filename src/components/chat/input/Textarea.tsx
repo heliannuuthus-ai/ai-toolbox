@@ -1,6 +1,6 @@
 import { ConfigProvider, Flex, Form, Input } from "antd";
 import { createStyles } from "antd-style";
-import { ChangeEventHandler } from "react";
+import { TextAreaProps } from "antd/es/input";
 
 const { TextArea: AntdTextArea } = Input;
 
@@ -36,20 +36,14 @@ const useStyles = createStyles(({ css }) => ({
   `,
 }));
 
-export const Textarea = ({
-  value,
-  onChange,
-}: {
-  value?: string;
-  onChange?: ChangeEventHandler<HTMLTextAreaElement>;
-}) => {
+export const Textarea = ({ value, onChange, ...props }: TextAreaProps) => {
   const form = Form.useFormInstance();
 
   const { styles } = useStyles();
   return (
     <Flex className={styles.container} align="center" vertical>
       <div className={styles.textareaBox}>
-        <span className={styles.message}>{value}</span>
+        <span className={styles.message}>{value + ""}</span>
         <ConfigProvider
           theme={{
             components: {
@@ -66,7 +60,7 @@ export const Textarea = ({
             className={styles.textarea}
             size="large"
             autoSize={{ minRows: 1, maxRows: 7 }}
-            placeholder="想向 wikipedia 了解什么？"
+            {...props}
             value={value}
             onChange={onChange}
             onPressEnter={(e) => {

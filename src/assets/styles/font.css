@@ -53,7 +53,8 @@
   font-family: "Noto Sans SC";
   font-weight: 400;
   font-style: italic;
-  src: url("../fonts/NotoSansSc/NotoSans_SemiCondensed-Italic.ttf") format("ttf");
+  src: url("../fonts/NotoSansSc/NotoSans_SemiCondensed-Italic.ttf")
+    format("ttf");
 }
 @font-face {
   font-family: "Noto Sans SC";

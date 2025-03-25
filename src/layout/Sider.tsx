@@ -1,6 +1,6 @@
 import { Layout, Menu } from "antd";
 import { createStyles } from "antd-style";
-import Logo from "@/assets/images/logo48.svg?react";
+import Logo from "@/assets/images/logo.svg?react";
 import Name from "@/assets/images/name.svg?react";
 import Wikipedia from "@/assets/images/layout/wikipedia.svg?react";
 const useStyles = createStyles(({ css }) => ({

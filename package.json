@@ -16,7 +16,8 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",
-    "@ant-design/pro-chat": "^1.15.3",
+    "@ant-design/v5-patch-for-react-19": "^1.0.3",
+    "@ant-design/x": "^1.0.6",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-clipboard-manager": "^2.2.1",
     "@tauri-apps/plugin-dialog": "^2.2.0",
@@ -31,18 +32,26 @@
     "antd-style": "^3.7.1",
     "axios": "^1.8.1",
     "gsap": "^3.12.7",
-    "lodash": "^4.17.21",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "lodash-es": "^4.17.21",
+    "rc-upload": "^4.8.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-markdown": "^10.1.0",
     "react-syntax-highlighter": "^15.6.1",
+    "rehype-stringify": "^10.0.1",
+    "remark": "^15.0.1",
+    "remark-gfm": "^4.0.1",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.1",
+    "remark-stringify": "^11.0.0",
+    "unified": "^11.0.5",
     "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2",
     "@types/lodash": "^4.17.16",
-    "@types/react": "^18.3.1",
-    "@types/react-dom": "^18.3.1",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "@types/react-syntax-highlighter": "^15.5.13",
     "@vitejs/plugin-react": "^4.3.4",
     "cross-env": "^7.0.3",
@@ -60,5 +69,5 @@
       "meta-json-schema"
     ]
   },
-  "packageManager": "pnpm@10.6.3"
+  "packageManager": "pnpm@10.6.5"
 }

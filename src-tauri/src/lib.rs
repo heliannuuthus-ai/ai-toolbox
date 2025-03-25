@@ -7,6 +7,7 @@ use tauri::ActivationPolicy;
 
 use tauri::{AppHandle, WindowEvent};
 
+mod command;
 mod config;
 mod core;
 mod utils;
@@ -103,7 +104,7 @@ pub fn run() {
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_deep_link::init())
-        .invoke_handler(tauri::generate_handler![greet])
+        .invoke_handler(tauri::generate_handler![greet, command::file::guess_mime_type])
         .setup(|app| {
             #[cfg(any(target_os = "linux", all(debug_assertions, windows)))]
             {

@@ -1,23 +1,30 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Chat from "@/components/chat";
 import { sendMessage, uploadFiles, feedback } from "@/apis/glossary";
 import { ChatMessage, FileMeta } from "@/apis/types";
 import { v4 as uuidv4 } from "uuid";
 import { FeedbackType, ChatRole } from "@/apis/types";
+import { UploadRequestOption } from "rc-upload/lib/interface";
+import { FormInstance } from "antd/es/form";
+import { UploadFile } from "antd";
 const Glossary = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [filesMeta, setFilesMeta] = useState<FileMeta[]>([]);
-  const [thinking, setThinking] = useState(false);
-  const [deepSearch, setDeepSearch] = useState(false);
   const [generating, setGenerating] = useState(false);
 
-  const onSubmit = async (values: any) => {
-    const { message } = values;
+  const form = useRef<FormInstance>(null);
+
+  const onSubmit = async (_: any) => {
+    const {
+      message,
+      thinking,
+      deepSearch,
+      files = [],
+    } = form.current?.getFieldsValue(true);
     if (message.trim() === "" || generating) {
       return;
     }
+    form.current?.setFieldsValue({ message: "" });
     setGenerating(true);
-
     const userMessageId = uuidv4();
     const assistantMessageId = uuidv4();
     const timestamp = Date.now();
@@ -49,9 +56,13 @@ const Glossary = () => {
     try {
       const resp = await sendMessage(
         message,
-        filesMeta,
+        Object.values(
+          files.map(
+            (file: UploadFile & { metadata?: FileMeta }) => file.metadata,
+          ),
+        ),
         thinking,
-        deepSearch
+        deepSearch,
       );
       const reader = resp.data.getReader();
       const decoder = new TextDecoder();
@@ -108,19 +119,16 @@ const Glossary = () => {
     }
   };
 
-  const onFilesChange = async (files: File[]) => {
-    const filesMeta = await uploadFiles(files);
-    setFilesMeta(filesMeta);
-  };
+  const onFilesChange = async (options: UploadRequestOption) => {
+    const { file, onSuccess, onError } = options;
 
-  const onThinkingChange = async (thinking: boolean) => {
-    setThinking(thinking);
-    console.log("thinking", thinking);
-  };
-
-  const onDeepSearchChange = async (deepSearch: boolean) => {
-    setDeepSearch(deepSearch);
-    console.log("deepSearch", deepSearch);
+    await uploadFiles(file as File)
+      .then((fileMeta) => {
+        onSuccess?.(fileMeta.data);
+      })
+      .catch((error) => {
+        onError?.(error);
+      });
   };
 
   const onStop = async () => {
@@ -134,15 +142,13 @@ const Glossary = () => {
 
   return (
     <Chat
-      messages={messages}
-      placeholder="请输入想了解的词条？"
+      form={form}
       generating={generating}
+      messages={messages}
       onFeedback={onFeedback}
       onSubmit={onSubmit}
       onStop={onStop}
-      onThinkingChange={onThinkingChange}
       onFilesChange={onFilesChange}
-      onDeepSearchChange={onDeepSearchChange}
     />
   );
 };

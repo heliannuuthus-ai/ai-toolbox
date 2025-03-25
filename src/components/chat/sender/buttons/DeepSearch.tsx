@@ -1,25 +1,27 @@
 import DeepSearchFilled from "@/assets/images/button/deepsearch-fill.svg?react";
 import DeepSearchOutlined from "@/assets/images/button/deepsearch-outline.svg?react";
 import Icon from "@ant-design/icons";
-import { Button } from "antd";
+import { Button, ButtonProps } from "antd";
+import { useState } from "react";
 
 const DeepSearch = ({
-  checked,
+  value,
   onChange,
-  onDeepSearchChange,
-}: {
-  checked?: boolean;
-  onChange?: (checked: boolean) => void;
-  onDeepSearchChange: (deepSearch: boolean) => void;
-}) => {
+  ...props
+}: { value?: boolean; onChange?: (value: boolean) => void } & Omit<
+  ButtonProps,
+  "onClick" | "onChange"
+>) => {
+  const [deepSearch, setDeepSearch] = useState(value ?? false);
   return (
     <Button
+      {...props}
       onClick={() => {
-        const deepSearch = !checked;
-        onChange?.(deepSearch);
-        onDeepSearchChange(deepSearch);
+        const tmp = !deepSearch;
+        setDeepSearch(tmp);
+        onChange?.(tmp);
       }}
-      variant={checked ? "filled" : "outlined"}
+      variant={deepSearch ? "filled" : "outlined"}
       color="default"
       icon={
         <Icon
@@ -29,12 +31,10 @@ const DeepSearch = ({
             alignItems: "center",
             borderRadius: "9999px",
           }}
-          component={checked ? DeepSearchFilled : DeepSearchOutlined}
+          component={deepSearch ? DeepSearchFilled : DeepSearchOutlined}
         />
       }
-    >
-      深度搜索
-    </Button>
+    />
   );
 };
 

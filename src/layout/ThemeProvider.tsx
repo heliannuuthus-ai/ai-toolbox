@@ -22,14 +22,14 @@ const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
       theme={{
         algorithm: dark ? theme.darkAlgorithm : theme.defaultAlgorithm,
         token: {
-          colorLink: dark ? "#29784c" : "#2e8555",
+          colorLink: dark ? "#7d8187" : "#7d8187",
           colorText: dark ? "rgb(128, 128, 128)" : "rgb(100, 102, 104)",
           colorTextLightSolid: dark
             ? "rgb(178, 178, 178)"
             : "rgb(100, 102, 104)",
-          colorPrimary: dark ? "#29784c" : "#33925d",
-          colorPrimaryHover: dark ? "#277148" : "#359962",
-          colorPrimaryActive: dark ? "#205d3b" : "#3cad6e",
+          colorPrimary: dark ? "#7d8187" : "#7d8187",
+          colorPrimaryHover: dark ? "#7d8187" : "#7d8187",
+          colorPrimaryActive: dark ? "#7d8187" : "#7d8187",
           colorTextDescription: dark
             ? "rgb(128, 128, 128)"
             : "rgb(100, 102, 104)",

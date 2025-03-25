@@ -8,6 +8,11 @@ export interface FileMeta {
   created_at: string;
 }
 
+export enum FileChangeType {
+  ADD = "add",
+  REMOVE = "remove",
+}
+
 export enum FeedbackType {
   LIKE = "like",
   DISLIKE = "dislike",

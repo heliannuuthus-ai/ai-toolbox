@@ -4,6 +4,12 @@ import { FileMeta, FeedbackType } from "@/apis/types";
 
 const client = clientFactory("/api/glossary");
 
+export const fetchFileTypes = async (): Promise<
+  AxiosResponse<Record<string, string[]>>
+> => {
+  return client.get("/file-types");
+};
+
 export const feedback = async (messageId: string, feedback: FeedbackType) => {
   return client.post(`/${messageId}/feedback`, {
     rating: feedback == FeedbackType.CANCEL ? null : feedback,
@@ -11,11 +17,11 @@ export const feedback = async (messageId: string, feedback: FeedbackType) => {
   });
 };
 
-export const uploadFiles = async (files: File[]): Promise<FileMeta[]> => {
+export const uploadFiles = async (
+  file: File,
+): Promise<AxiosResponse<FileMeta>> => {
   const formData = new FormData();
-  files.forEach((file) => {
-    formData.append("files", file);
-  });
+  formData.append("file", file);
   return client.post("/upload", formData);
 };
 
@@ -23,7 +29,7 @@ export const sendMessage = async (
   prompt: string,
   filesMeta: FileMeta[],
   thinking: boolean,
-  deepSearch: boolean
+  deepSearch: boolean,
 ): Promise<AxiosResponse<ReadableStream>> => {
   console.log("sendMessage", prompt, filesMeta, thinking);
   return client.post(
@@ -41,6 +47,6 @@ export const sendMessage = async (
       },
       responseType: "stream",
       adapter: "fetch",
-    }
+    },
   );
 };

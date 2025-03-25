@@ -1,23 +1,30 @@
-import { useState } from "react";
-import Chat, { type MessageProps } from "@/components/chat";
-import { sendMessage, uploadFiles } from "@/apis/glossary";
-import { MessageRole } from "@/components/chat/box/Box";
-import { FileMeta } from "@/apis/types";
+import { useRef, useState } from "react";
+import Chat from "@/components/chat";
+import { sendMessage, uploadFiles, feedback } from "@/apis/glossary";
+import { ChatMessage, FileMeta } from "@/apis/types";
 import { v4 as uuidv4 } from "uuid";
-import { Feedback as FeedbackType } from "@/apis/types";
+import { FeedbackType, ChatRole } from "@/apis/types";
+import { UploadRequestOption } from "rc-upload/lib/interface";
+import { FormInstance } from "antd/es/form";
+import { UploadFile } from "antd";
 const Glossary = () => {
-  const [messages, setMessages] = useState<MessageProps[]>([]);
-  const [filesMeta, setFilesMeta] = useState<FileMeta[]>([]);
-  const [thinking, setThinking] = useState(false);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [generating, setGenerating] = useState(false);
 
-  const onSubmit = async (values: any) => {
-    const { message } = values;
+  const form = useRef<FormInstance>(null);
+
+  const onSubmit = async (_: any) => {
+    const {
+      message,
+      thinking,
+      deepSearch,
+      files = [],
+    } = form.current?.getFieldsValue(true);
     if (message.trim() === "" || generating) {
       return;
     }
+    form.current?.setFieldsValue({ message: "" });
     setGenerating(true);
-
     const userMessageId = uuidv4();
     const assistantMessageId = uuidv4();
     const timestamp = Date.now();
@@ -29,7 +36,7 @@ const Glossary = () => {
           messageId: userMessageId, // temporary
           taskId: userMessageId, // temporary
           conversationId: userMessageId,
-          role: MessageRole.USER,
+          role: ChatRole.USER,
           content: message,
           loading: false,
           createdAt: timestamp,
@@ -38,7 +45,7 @@ const Glossary = () => {
           messageId: assistantMessageId, // temporary
           taskId: assistantMessageId, // temporary
           conversationId: assistantMessageId,
-          role: MessageRole.ASSISTANT,
+          role: ChatRole.ASSISTANT,
           content: "",
           loading: true,
           createdAt: timestamp,
@@ -47,7 +54,16 @@ const Glossary = () => {
     });
 
     try {
-      const resp = await sendMessage(message, filesMeta, thinking);
+      const resp = await sendMessage(
+        message,
+        Object.values(
+          files.map(
+            (file: UploadFile & { metadata?: FileMeta }) => file.metadata,
+          ),
+        ),
+        thinking,
+        deepSearch,
+      );
       const reader = resp.data.getReader();
       const decoder = new TextDecoder();
       let buffer = ""; // 用于累积未完成的消息
@@ -71,11 +87,16 @@ const Glossary = () => {
               ) {
                 return msg;
               }
-              if (msg.role === MessageRole.ASSISTANT) {
+              if (msg.role === ChatRole.ASSISTANT) {
                 return {
                   ...msg,
+                  messageId: message["message_id"],
+                  taskId: message["task_id"],
+                  conversationId: message["conversation_id"],
                   content: msg.content + (message["answer"] || ""),
                   loading: false,
+                  createdAt: message["created_at"],
+                  metadata: message["metadata"],
                 };
               } else {
                 return {
@@ -84,6 +105,7 @@ const Glossary = () => {
                   taskId: message["task_id"],
                   conversationId: message["conversation_id"],
                   loading: false,
+                  createdAt: message["created_at"],
                 };
               }
             });
@@ -97,27 +119,35 @@ const Glossary = () => {
     }
   };
 
-  const onFilesChange = async (files: File[]) => {
-    const filesMeta = await uploadFiles(files);
-    setFilesMeta(filesMeta);
+  const onFilesChange = async (options: UploadRequestOption) => {
+    const { file, onSuccess, onError } = options;
+
+    await uploadFiles(file as File)
+      .then((fileMeta) => {
+        onSuccess?.(fileMeta.data);
+      })
+      .catch((error) => {
+        onError?.(error);
+      });
   };
 
-  const onThinkingChange = async (thinking: boolean) => {
-    setThinking(thinking);
+  const onStop = async () => {
+    console.log("stop");
+  };
+
+  const onFeedback = async (messageId: string, feedbackType: FeedbackType) => {
+    console.log("messageId", messageId, "feedbackType", feedbackType);
+    await feedback(messageId, feedbackType);
   };
 
   return (
     <Chat
-      messages={messages}
+      form={form}
       generating={generating}
-      onFeedback={async (feedback: FeedbackType) => {
-        console.log("feedback", feedback);
-      }}
+      messages={messages}
+      onFeedback={onFeedback}
       onSubmit={onSubmit}
-      onStop={async () => {
-        console.log("stop");
-      }}
-      onThinkingChange={onThinkingChange}
+      onStop={onStop}
       onFilesChange={onFilesChange}
     />
   );

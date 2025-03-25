@@ -2,42 +2,42 @@
   font-family: "Source Code Pro";
   font-weight: 400;
   font-style: normal;
-  src: url("./fonts/SourceCodePro/SourceCodePro-Regular.ttf") format("ttf");
+  src: url("../fonts/SourceCodePro/SourceCodePro-Regular.ttf") format("ttf");
 }
 
 @font-face {
   font-family: "Source Code Pro";
   font-weight: 700;
   font-style: normal;
-  src: url("./fonts/SourceCodePro/SourceCodePro-Bold.ttf") format("ttf");
+  src: url("../fonts/SourceCodePro/SourceCodePro-Bold.ttf") format("ttf");
 }
 
 @font-face {
   font-family: "Source Code Pro";
   font-weight: 400;
   font-style: italic;
-  src: url("./fonts/SourceCodePro/SourceCodePro-Italic.ttf") format("ttf");
+  src: url("../fonts/SourceCodePro/SourceCodePro-Italic.ttf") format("ttf");
 }
 
 @font-face {
   font-family: "Source Code Pro";
   font-weight: 700;
   font-style: italic;
-  src: url("./fonts/SourceCodePro/SourceCodePro-BoldItalic.ttf") format("ttf");
+  src: url("../fonts/SourceCodePro/SourceCodePro-BoldItalic.ttf") format("ttf");
 }
 
 @font-face {
   font-family: "Noto Sans SC";
   font-weight: 300;
   font-style: normal;
-  src: url("./fonts/NotoSansSc/NotoSans_SemiCondensed-Light.ttf") format("ttf");
+  src: url("../fonts/NotoSansSc/NotoSans_SemiCondensed-Light.ttf") format("ttf");
 }
 
 @font-face {
   font-family: "Noto Sans SC";
   font-weight: 300;
   font-style: italic;
-  src: url("../../static/fonts/NotoSansSc/NotoSans_SemiCondensed-LightItalic.ttf")
+  src: url("../fonts/NotoSansSc/NotoSans_SemiCondensed-LightItalic.ttf")
     format("ttf");
 }
 
@@ -45,7 +45,7 @@
   font-family: "Noto Sans SC";
   font-weight: 400;
   font-style: normal;
-  src: url("../../static/fonts/NotoSansSc/NotoSans_SemiCondensed-Regular.ttf")
+  src: url("../fonts/NotoSansSc/NotoSans_SemiCondensed-Regular.ttf")
     format("ttf");
 }
 
@@ -53,13 +53,14 @@
   font-family: "Noto Sans SC";
   font-weight: 400;
   font-style: italic;
-  src: url("./fonts/NotoSansSc/NotoSans_SemiCondensed-Italic.ttf") format("ttf");
+  src: url("../fonts/NotoSansSc/NotoSans_SemiCondensed-Italic.ttf")
+    format("ttf");
 }
 @font-face {
   font-family: "Noto Sans SC";
   font-weight: 500;
   font-style: normal;
-  src: url("./fonts/NotoSansSc/NotoSans_SemiCondensed-SemiBold.ttf")
+  src: url("../fonts/NotoSansSc/NotoSans_SemiCondensed-SemiBold.ttf")
     format("ttf");
 }
 
@@ -67,7 +68,7 @@
   font-family: "Noto Sans SC";
   font-weight: 500;
   font-style: italic;
-  src: url("./fonts/NotoSansSc/NotoSans_SemiCondensed-SemiBoldItalic.ttf")
+  src: url("../fonts/NotoSansSc/NotoSans_SemiCondensed-SemiBoldItalic.ttf")
     format("ttf");
 }
 
@@ -75,13 +76,13 @@
   font-family: "Noto Sans SC";
   font-weight: 700;
   font-style: normal;
-  src: url("./fonts/NotoSansSc/NotoSans_SemiCondensed-Bold.ttf") format("ttf");
+  src: url("../fonts/NotoSansSc/NotoSans_SemiCondensed-Bold.ttf") format("ttf");
 }
 
 @font-face {
   font-family: "Noto Sans SC";
   font-weight: 700;
   font-style: italic;
-  src: url("./fonts/NotoSansSc/NotoSans_SemiCondensed-BoldItalic.ttf")
+  src: url("../fonts/NotoSansSc/NotoSans_SemiCondensed-BoldItalic.ttf")
     format("ttf");
 }

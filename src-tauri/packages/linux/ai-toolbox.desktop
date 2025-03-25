@@ -7,4 +7,4 @@ Icon={{{icon}}}
 Name={{{name}}}
 Terminal=false
 Type=Application
-MimeType=x-scheme-handler/heliannuuthus-ai;
+MimeType=x-scheme-handler/ai-toolbox;

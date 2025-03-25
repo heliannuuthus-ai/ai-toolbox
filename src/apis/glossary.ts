@@ -1,21 +1,35 @@
 import clientFactory from "@/apis/axios";
 import { AxiosResponse } from "axios";
-import { FileMeta } from "@/apis/types";
+import { FileMeta, FeedbackType } from "@/apis/types";
 
 const client = clientFactory("/api/glossary");
 
-export const uploadFiles = async (files: File[]): Promise<FileMeta[]> => {
-  const formData = new FormData();
-  files.forEach((file) => {
-    formData.append("files", file);
+export const fetchFileTypes = async (): Promise<
+  AxiosResponse<Record<string, string[]>>
+> => {
+  return client.get("/file-types");
+};
+
+export const feedback = async (messageId: string, feedback: FeedbackType) => {
+  return client.post(`/${messageId}/feedback`, {
+    rating: feedback == FeedbackType.CANCEL ? null : feedback,
+    content: "nice glossary",
   });
-  return client.post("/glossary/upload", formData);
+};
+
+export const uploadFiles = async (
+  file: File,
+): Promise<AxiosResponse<FileMeta>> => {
+  const formData = new FormData();
+  formData.append("file", file);
+  return client.post("/upload", formData);
 };
 
 export const sendMessage = async (
   prompt: string,
   filesMeta: FileMeta[],
   thinking: boolean,
+  deepSearch: boolean,
 ): Promise<AxiosResponse<ReadableStream>> => {
   console.log("sendMessage", prompt, filesMeta, thinking);
   return client.post(
@@ -23,7 +37,8 @@ export const sendMessage = async (
     {
       prompt,
       thinking,
-      filesMeta,
+      files_meta: filesMeta,
+      deep_search: deepSearch,
     },
     {
       headers: {

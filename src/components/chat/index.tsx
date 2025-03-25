@@ -1,8 +1,10 @@
-import { Box, MessageProps, MessageRole } from "@/components/chat/box";
-import Input from "@/components/chat/input";
-import { Feedback as FeedbackType } from "@/apis/types";
+import { Bubble } from "@/components/chat/bubble";
+import Input from "@/components/chat/sender";
+import { ChatMessage, FeedbackType } from "@/apis/types";
 import { createStyles } from "antd-style";
+import { FormInstance } from "antd";
 import { useEffect, useRef } from "react";
+import { UploadRequestOption } from "rc-upload/lib/interface";
 const useStyles = createStyles(({ css }) => ({
   container: css`
     height: 100%;
@@ -28,21 +30,21 @@ const useStyles = createStyles(({ css }) => ({
 }));
 
 const Chat = ({
+  form,
   generating,
   messages,
   onFeedback,
   onSubmit,
   onStop,
   onFilesChange,
-  onThinkingChange,
 }: {
+  form: React.RefObject<FormInstance | null>;
   generating: boolean;
-  messages: MessageProps[];
-  onFeedback: (feedback: FeedbackType) => Promise<void>;
+  messages: ChatMessage[];
+  onFeedback: (messageId: string, feedbackType: FeedbackType) => Promise<void>;
+  onFilesChange: (options: UploadRequestOption) => Promise<void>;
   onSubmit: (values: any) => Promise<void>;
   onStop: () => Promise<void>;
-  onFilesChange: (files: File[]) => Promise<void>;
-  onThinkingChange: (thinking: boolean) => Promise<void>;
 }) => {
   const { styles } = useStyles();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -63,15 +65,15 @@ const Chat = ({
     <>
       <div className={styles.container} ref={containerRef}>
         <div className={styles.messageContainer} ref={messageContainerRef}>
-          <Box messages={messages} onFeedback={onFeedback} />
+          <Bubble messages={messages} onFeedback={onFeedback} />
           <div style={{ paddingBottom: "144px" }}></div>
         </div>
       </div>
       <div className={styles.inputContainer}>
         <Input
+          form={form}
           generating={generating}
           onFilesChange={onFilesChange}
-          onThinkingChange={onThinkingChange}
           onStop={onStop}
           onSubmit={onSubmit}
         />
@@ -81,5 +83,3 @@ const Chat = ({
 };
 
 export default Chat;
-
-export type { MessageProps, MessageRole };

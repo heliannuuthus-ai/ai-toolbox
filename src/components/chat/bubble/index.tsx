@@ -2,7 +2,7 @@ import { createStyles } from "antd-style";
 import { ChatMessage, FeedbackType, ChatRole } from "@/apis/types";
 import { Flex } from "antd";
 import { Bubble as AntdBubble, BubbleProps } from "@ant-design/x";
-import { Buttons } from "@/components/chat/bubble/buttons";
+import Buttons from "./Buttons";
 import Markdown from "@/components/markdown/Markdown";
 import { useEffect, useRef, useState } from "react";
 
@@ -18,7 +18,6 @@ const useStyle = createStyles(({ css, token, cx }) => {
 
   return {
     container: css`
-      height: 100%;
       overflow-y: auto;
       width: 100%;
     `,
@@ -108,18 +107,15 @@ const Bubble = ({
 
   return (
     <>
-      <Flex
-        ref={containerRef}
-        className={styles.container}
-        align="center"
-        justify="center"
-      >
+      <Flex ref={containerRef} className={styles.container} justify="center">
         <Flex
           ref={bubbleContainerRef}
           vertical
           className={styles.bubbleContainer}
         >
           <AntdBubble.List
+            autoScroll={false}
+            style={{ height: "auto", overflow: "visible" }}
             items={messages.map((message) => {
               const isAi = message.role === ChatRole.ASSISTANT;
               return {
@@ -156,7 +152,7 @@ const Bubble = ({
               };
             })}
           />
-          <div style={{ paddingBottom: "144px" }}></div>
+          <div style={{ paddingBottom: "168px" }}></div>
         </Flex>
       </Flex>
     </>

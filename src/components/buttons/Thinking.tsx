@@ -2,7 +2,6 @@ import LightOff from "@/assets/images/button/light-off.svg?react";
 import LightOn from "@/assets/images/button/light-on.svg?react";
 import Icon from "@ant-design/icons";
 import { Button, ButtonProps } from "antd";
-import { useState } from "react";
 const Thinking = ({
   value,
   onChange,
@@ -11,17 +10,15 @@ const Thinking = ({
   value?: boolean;
   onChange?: (value: boolean) => Promise<void>;
 } & Omit<ButtonProps, "value" | "onClick" | "onChange">) => {
-  const [thinking, setThinking] = useState(value ?? false);
+  const handleClick = async () => {
+    onChange?.(!value);
+  };
 
   return (
     <Button
       {...props}
-      onClick={() => {
-        const tmp = !thinking;
-        setThinking(tmp);
-        onChange?.(tmp);
-      }}
-      variant={thinking ? "filled" : "outlined"}
+      onClick={handleClick}
+      variant={value ? "filled" : "outlined"}
       color="default"
       icon={
         <Icon
@@ -31,7 +28,7 @@ const Thinking = ({
             alignItems: "center",
             borderRadius: "9999px",
           }}
-          component={thinking ? LightOn : LightOff}
+          component={value ? LightOn : LightOff}
         />
       }
     />

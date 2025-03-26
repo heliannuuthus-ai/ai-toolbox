@@ -3,10 +3,9 @@ import Sender from "@/components/chat/sender";
 import { ChatMessage, FeedbackType } from "@/apis/types";
 import { createStyles } from "antd-style";
 import { FormInstance } from "antd";
-import { useEffect, useRef, useState } from "react";
 import { UploadRequestOption } from "rc-upload/lib/interface";
 const useStyles = createStyles(({ css }) => ({
-  container: css`
+  bubbleContainer: css`
     height: 100%;
     display: flex;
     align-items: center;
@@ -45,7 +44,7 @@ const Chat = ({
 
   return (
     <>
-      <div className={styles.container}>
+      <div className={styles.bubbleContainer}>
         <Bubble messages={messages} onFeedback={onFeedback} />
       </div>
       <div className={styles.inputContainer}>

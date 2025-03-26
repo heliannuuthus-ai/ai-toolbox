@@ -43,7 +43,8 @@ const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
           fontSizeHeading3: 24,
           fontSizeHeading4: 20,
           fontSizeHeading5: 16,
-          fontFamily: "Noto Sans SC, sans-serif, Arial, Helvetica",
+          fontFamily:
+            "Noto Sans Mono, Noto Sans SC, PingFang SC, Microsoft YaHei, monospace",
         },
         components: {
           Steps: {},

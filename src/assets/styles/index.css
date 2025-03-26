@@ -8,7 +8,7 @@
 body {
   margin: 0;
   font-family:
-    -apple-system, "Noto Sans SC", "Source Code Pro", sans-serif, Helvetica;
+    -apple-system, "Noto Sans Mono", "Source Code Pro", sans-serif, Helvetica;
   -webkit-font-smoothing: antialiased;
 
   user-select: none;
@@ -17,8 +17,12 @@ body {
   -ms-user-select: none;
 }
 
+code {
+  font-family: "Source Code Pro", sans-serif, Helvetica;
+}
+
 :root {
-  --primary-main: #2e8555;
+  --primary-main: #7d8187;
   --text-primary: #1f1f1f;
   --selection-color: #f5f5f5;
   --scroller-thumb: rgba(0, 0, 0, 0.3);

@@ -2,7 +2,7 @@ import { Button, ButtonProps } from "antd";
 import Icon from "@ant-design/icons";
 import LinkOutline from "@/assets/images/button/link-outline.svg?react";
 import LinkFill from "@/assets/images/button/link-fill.svg?react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Upload = ({
   value,
@@ -13,6 +13,8 @@ const Upload = ({
   onChange?: (value: boolean) => Promise<void>;
 } & ButtonProps) => {
   const [uploading, setUploading] = useState(value ?? false);
+
+  useEffect(() => {}, [value]);
 
   return (
     <Button

@@ -1,8 +1,6 @@
 import { ChatMessage, FeedbackType, ChatRole } from "@/apis/types";
 import { Flex } from "antd";
-import Copy from "@/components/chat/bubble/buttons/Copy";
-import Edit from "@/components/chat/bubble/buttons/Edit";
-import Feedback from "@/components/chat/bubble/buttons/Feedback";
+import { Copy, Edit, Dislike, Like } from "@/components/buttons";
 import { createStyles } from "antd-style";
 
 // 定义样式
@@ -56,16 +54,16 @@ const Buttons = ({
       className={className}
       style={{ direction: isAi ? "ltr" : "rtl" }}
     >
-      <Copy className={commonClassName} message={message} />
-      <Edit className={commonClassName} message={message} />
+      <Copy className={commonClassName} content={message.content} />
+      <Edit className={commonClassName} content={message.content} />
       {message.role === ChatRole.ASSISTANT && (
         <>
-          <Feedback.Dislike
+          <Dislike
             className={styles.aiReplyButton}
             message={message}
             onFeedback={onFeedback}
           />
-          <Feedback.Like
+          <Like
             className={styles.aiReplyButton}
             message={message}
             onFeedback={onFeedback}
@@ -76,4 +74,4 @@ const Buttons = ({
   );
 };
 
-export { Buttons };
+export default Buttons;

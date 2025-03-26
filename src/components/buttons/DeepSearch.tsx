@@ -2,7 +2,6 @@ import DeepSearchFilled from "@/assets/images/button/deepsearch-fill.svg?react";
 import DeepSearchOutlined from "@/assets/images/button/deepsearch-outline.svg?react";
 import Icon from "@ant-design/icons";
 import { Button, ButtonProps } from "antd";
-import { useState } from "react";
 
 const DeepSearch = ({
   value,
@@ -12,16 +11,13 @@ const DeepSearch = ({
   ButtonProps,
   "onClick" | "onChange"
 >) => {
-  const [deepSearch, setDeepSearch] = useState(value ?? false);
   return (
     <Button
       {...props}
       onClick={() => {
-        const tmp = !deepSearch;
-        setDeepSearch(tmp);
-        onChange?.(tmp);
+        onChange?.(!value);
       }}
-      variant={deepSearch ? "filled" : "outlined"}
+      variant={value ? "filled" : "outlined"}
       color="default"
       icon={
         <Icon
@@ -31,7 +27,7 @@ const DeepSearch = ({
             alignItems: "center",
             borderRadius: "9999px",
           }}
-          component={deepSearch ? DeepSearchFilled : DeepSearchOutlined}
+          component={value ? DeepSearchFilled : DeepSearchOutlined}
         />
       }
     />

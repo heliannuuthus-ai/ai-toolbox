@@ -3,8 +3,10 @@ import mermaid from "mermaid";
 import { useTheme } from "antd-style";
 import { svgToBase64 } from "@/utils/markdown";
 import { usePrevious } from "ahooks";
-import { Image, Result, Spin, Tabs } from "antd";
+import { Image, Result, Spin, Tabs, Typography } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
+
+const { Text } = Typography;
 
 const Mermaid = ({
   ref,
@@ -32,7 +34,7 @@ const Mermaid = ({
       } catch (error) {
         if (prevPrimitiveCode !== primitiveCode) {
           console.error("Error rendering mermaid", error);
-          setError(error as string);
+          setError((error as Error).message);
         }
       } finally {
         setLoading(false);
@@ -43,18 +45,18 @@ const Mermaid = ({
 
   useEffect(() => {
     console.log("mermaid theme", theme.appearance);
-
-    mermaid.initialize({
-      startOnLoad: true,
-      theme: theme.appearance === "dark" ? "dark" : "neutral",
-      look,
-      flowchart: {
-        htmlLabels: true,
-        useMaxWidth: true,
-      },
-    });
-
-    render(primitiveCode);
+    if (typeof window !== "undefined") {
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: theme.appearance === "dark" ? "dark" : "neutral",
+        look,
+        flowchart: {
+          htmlLabels: true,
+          useMaxWidth: true,
+        },
+      });
+      render(primitiveCode);
+    }
   }, [look]);
 
   useEffect(() => {
@@ -98,7 +100,6 @@ const Body = ({
   loading: boolean;
   error: string | null;
 }) => {
-  console.log("svg", svg, "loading", loading, "error", error);
   return svg ? (
     <Image
       preview={{
@@ -110,7 +111,21 @@ const Body = ({
   ) : loading ? (
     <Spin indicator={<LoadingOutlined />} />
   ) : error ? (
-    <Result status="error" title="Error" subTitle={error} />
+    <Result
+      status="error"
+      title="Error"
+      subTitle={
+        <Text
+          style={{
+            width: "100%",
+            wordWrap: "break-word",
+            whiteSpace: "pre-wrap",
+          }}
+        >
+          {error}
+        </Text>
+      }
+    />
   ) : null;
 };
 

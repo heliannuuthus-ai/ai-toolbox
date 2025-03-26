@@ -8,7 +8,7 @@ import Upload from "./buttons/Upload";
 import { fetchFileTypes } from "@/apis/glossary";
 import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { UploadRequestOption } from "rc-upload/lib/interface";
-import { invoke } from "@tauri-apps/api/core";
+import { guessMimeType } from "@/commands/common";
 import { FileMeta } from "@/apis/types";
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -95,9 +95,7 @@ const Header = ({
             ) {
               await Promise.all(
                 event.payload.paths.map(async (path) => {
-                  const mimeType = await invoke<string>("guess_mime_type", {
-                    path,
-                  });
+                  const mimeType = await guessMimeType(path);
                   return attachmentsRef.current?.upload(
                     new File([], path.split("/").pop() ?? "", {
                       type: mimeType,

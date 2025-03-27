@@ -5,7 +5,7 @@ const { Content: AntContent } = Layout;
 
 const useStyles = createStyles(({ css }) => ({
   content: css`
-    height: "100%";
+    height: "100dhv";
     display: "flex";
     flex-direction: "column";
     overflow: "hidden";

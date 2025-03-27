@@ -3,13 +3,12 @@ import { Sender as AntdSender, Attachments } from "@ant-design/x";
 import { Flex, Form, message, UploadFile, Upload as AntdUpload } from "antd";
 import { createStyles } from "antd-style";
 import { useEffect, useState } from "react";
-import Buttons from "./buttons";
-import Upload from "./buttons/Upload";
 import { fetchFileTypes } from "@/apis/glossary";
 import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { UploadRequestOption } from "rc-upload/lib/interface";
-import { invoke } from "@tauri-apps/api/core";
+import { guessMimeType } from "@/commands/common";
 import { FileMeta } from "@/apis/types";
+import { Thinking, DeepSearch, Upload } from "@/components/buttons";
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
@@ -78,6 +77,24 @@ const Header = ({
 
   const uploading: boolean = Form.useWatch("uploading", form) || false;
 
+  // 监听两个字段的值
+  const thinking = Form.useWatch("thinking", form);
+  const deepSearch = Form.useWatch("deepSearch", form);
+
+  useEffect(() => {
+    console.log("deepSearch", deepSearch, thinking);
+    if (thinking && deepSearch) {
+      form.setFieldsValue({ thinking: false });
+    }
+  }, [deepSearch]);
+
+  useEffect(() => {
+    console.log("thinking", thinking, deepSearch);
+    if (thinking && deepSearch) {
+      form.setFieldsValue({ deepSearch: false });
+    }
+  }, [thinking]);
+
   useEffect(() => {
     fetchFileTypes().then((res) => {
       setSupportedFileTypes(res.data);
@@ -95,9 +112,7 @@ const Header = ({
             ) {
               await Promise.all(
                 event.payload.paths.map(async (path) => {
-                  const mimeType = await invoke<string>("guess_mime_type", {
-                    path,
-                  });
+                  const mimeType = await guessMimeType(path);
                   return attachmentsRef.current?.upload(
                     new File([], path.split("/").pop() ?? "", {
                       type: mimeType,
@@ -167,13 +182,13 @@ const Header = ({
             </Flex>
             <Flex gap={12}>
               <Form.Item noStyle name="thinking">
-                <Buttons.Thinking
+                <Thinking
                   style={{ borderRadius: "9999px" }}
                   children={"思考"}
                 />
               </Form.Item>
               <Form.Item noStyle name="deepSearch">
-                <Buttons.DeepSearch
+                <DeepSearch
                   children={"深度搜索"}
                   style={{ borderRadius: "9999px" }}
                 />
@@ -219,8 +234,8 @@ const Header = ({
                   }
                 : {
                     icon: <CloudUploadOutlined />,
-                    title: "Upload files",
-                    description: "Click or drag files to this area to upload",
+                    title: "上传文件",
+                    description: "点击或拖动文件到此区域上传",
                   }
             }
             getDropContainer={() => senderRef.current?.nativeElement}

@@ -104,7 +104,11 @@ pub fn run() {
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_deep_link::init())
-        .invoke_handler(tauri::generate_handler![greet, command::file::guess_mime_type])
+        .invoke_handler(tauri::generate_handler![
+            greet,
+            command::common::guess_mime_type,
+            command::common::set_theme,
+        ])
         .setup(|app| {
             #[cfg(any(target_os = "linux", all(debug_assertions, windows)))]
             {

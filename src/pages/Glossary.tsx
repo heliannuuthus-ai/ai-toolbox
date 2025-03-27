@@ -114,6 +114,14 @@ const Glossary = () => {
       }
     } catch (error: any) {
       console.log("error", error);
+      setMessages((prevMessages) => {
+        return prevMessages.map((msg) => {
+          if (msg.messageId === assistantMessageId) {
+            return { ...msg, content: "发送失败，请重试", loading: false };
+          }
+          return msg;
+        });
+      });
     } finally {
       setGenerating(false);
     }

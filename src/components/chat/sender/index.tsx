@@ -2,7 +2,7 @@ import { Sender as AntdSender, Attachments } from "@ant-design/x";
 import { createStyles } from "antd-style";
 import { Flex, Form, FormInstance, GetRef } from "antd";
 import Header from "./Header";
-import Submit from "./buttons/Submit";
+import { Submit } from "@/components/buttons";
 import { useRef } from "react";
 import { UploadRequestOption } from "rc-upload/lib/interface";
 const useStyles = createStyles(({ css, token }) => ({

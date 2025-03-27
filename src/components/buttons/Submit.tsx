@@ -68,9 +68,7 @@ const PlayPauseButton = ({ generating }: { generating: boolean }) => {
 };
 
 const Submit = ({ generating, onSubmit, onStop }: SubmitProps) => {
-  useEffect(() => {
-    console.log("submit", generating);
-  }, [generating]);
+  useEffect(() => {}, [generating]);
 
   return (
     <Button

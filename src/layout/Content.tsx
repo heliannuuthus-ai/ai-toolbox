@@ -1,6 +1,6 @@
 import { createStyles } from "antd-style";
 import { Layout } from "antd";
-import Glossary from "@/pages/Glossary";
+import { Content as Glossary } from "@/pages/glossary";
 const { Content: AntContent } = Layout;
 
 const useStyles = createStyles(({ css }) => ({

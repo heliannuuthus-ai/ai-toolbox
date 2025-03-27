@@ -82,16 +82,14 @@ const Header = ({
   const deepSearch = Form.useWatch("deepSearch", form);
 
   useEffect(() => {
-    console.log("deepSearch", deepSearch, thinking);
     if (thinking && deepSearch) {
-      form.setFieldsValue({ thinking: false });
+      form.setFieldsValue({ thinking: false, mode: "deepsearch" });
     }
   }, [deepSearch]);
 
   useEffect(() => {
-    console.log("thinking", thinking, deepSearch);
     if (thinking && deepSearch) {
-      form.setFieldsValue({ deepSearch: false });
+      form.setFieldsValue({ deepSearch: false, mode: "think" });
     }
   }, [thinking]);
 

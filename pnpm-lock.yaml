@@ -46,6 +46,9 @@ importers:
       "@tauri-apps/plugin-shell":
         specifier: 2.2.0
         version: 2.2.0
+      "@tauri-apps/plugin-store":
+        specifier: ~2.2.0
+        version: 2.2.0
       "@tauri-apps/plugin-window-state":
         specifier: ^2.2.1
         version: 2.2.1
@@ -82,6 +85,9 @@ importers:
       react:
         specifier: ^19.0.0
         version: 19.0.0
+      react-countup:
+        specifier: ^6.5.3
+        version: 6.5.3(react@19.0.0)
       react-dom:
         specifier: ^19.0.0
         version: 19.0.0(react@19.0.0)
@@ -1343,6 +1349,12 @@ packages:
         integrity: sha512-iC3Ic1hLmasoboG7BO+7p+AriSoqAwKrIk+Hpk+S/bjTQdXqbl2GbdclghI4gM32X0bls7xHzIFqhRdrlvJeaA==,
       }
 
+  "@tauri-apps/plugin-store@2.2.0":
+    resolution:
+      {
+        integrity: sha512-hJTRtuJis4w5fW1dkcgftsYxKXK0+DbAqurZ3CURHG5WkAyyZgbxpeYctw12bbzF9ZbZREXZklPq8mocCC3Sgg==,
+      }
+
   "@tauri-apps/plugin-window-state@2.2.1":
     resolution:
       {
@@ -1952,6 +1964,12 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
+
+  countup.js@2.8.0:
+    resolution:
+      {
+        integrity: sha512-f7xEhX0awl4NOElHulrl4XRfKoNH3rB+qfNSZZyjSZhaAoUk6elvhH+MNxMmlmuUJ2/QNTWPSA7U4mNtIAKljQ==,
+      }
 
   cross-env@7.0.3:
     resolution:
@@ -3895,6 +3913,14 @@ packages:
       react: ">=16.9.0"
       react-dom: ">=16.9.0"
 
+  react-countup@6.5.3:
+    resolution:
+      {
+        integrity: sha512-udnqVQitxC7QWADSPDOxVWULkLvKUWrDapn5i53HE4DPRVgs+Y5rr4bo25qEl8jSh+0l2cToJgGMx+clxPM3+w==,
+      }
+    peerDependencies:
+      react: ">= 16.3.0"
+
   react-dom@19.0.0:
     resolution:
       {
@@ -5222,6 +5248,10 @@ snapshots:
     dependencies:
       "@tauri-apps/api": 2.3.0
 
+  "@tauri-apps/plugin-store@2.2.0":
+    dependencies:
+      "@tauri-apps/api": 2.3.0
+
   "@tauri-apps/plugin-window-state@2.2.1":
     dependencies:
       "@tauri-apps/api": 2.3.0
@@ -5642,6 +5672,8 @@ snapshots:
       path-type: 4.0.0
     optionalDependencies:
       typescript: 5.6.3
+
+  countup.js@2.8.0: {}
 
   cross-env@7.0.3:
     dependencies:
@@ -7177,6 +7209,11 @@ snapshots:
       rc-util: 5.44.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
+
+  react-countup@6.5.3(react@19.0.0):
+    dependencies:
+      countup.js: 2.8.0
+      react: 19.0.0
 
   react-dom@19.0.0(react@19.0.0):
     dependencies:

@@ -116,40 +116,68 @@ const Bubble = ({
           <AntdBubble.List
             autoScroll={false}
             style={{ height: "auto", overflow: "visible" }}
-            items={messages.map((message) => {
-              const isAi = message.role === ChatRole.ASSISTANT;
-              return {
-                className: styles.bubble,
-                placement: isAi ? "start" : "end",
-                role: message.role,
-                key: message.messageId,
-                content: message.content,
-                shape: "corner",
-                variant: isAi ? "outlined" : "shadow",
-                loading: message.loading,
-                typing: isAi
-                  ? {
-                      step: 60,
-                      interval: 100,
-                    }
-                  : undefined,
-                styles: {
-                  content: {
-                    maxWidth: "75%",
-                    borderRadius: "1.5rem",
-                    borderBottomRightRadius: isAi ? "1.5rem" : "0",
-                    borderBottomLeftRadius: isAi ? "0" : "1.5rem",
+            items={messages.flatMap((message) => {
+              return [
+                {
+                  className: styles.bubble,
+                  placement: "end",
+                  role: ChatRole.USER,
+                  key: `user-${message.id}`,
+                  content: message.query,
+                  shape: "corner",
+                  variant: "outlined",
+                  loading: false,
+                  typing: undefined,
+                  styles: {
+                    content: {
+                      maxWidth: "75%",
+                      borderRadius: "1.5rem",
+                      borderBottomRightRadius: "1.5rem",
+                      borderBottomLeftRadius: "0",
+                    },
                   },
+                  footer: (
+                    <Buttons
+                      className={styles.buttons}
+                      isAi={false}
+                      message={message}
+                      onFeedback={onFeedback}
+                    />
+                  ),
+                  messageRender: renderMarkdown,
                 },
-                footer: (
-                  <Buttons
-                    className={styles.buttons}
-                    message={message}
-                    onFeedback={onFeedback}
-                  />
-                ),
-                messageRender: renderMarkdown,
-              };
+                {
+                  className: styles.bubble,
+                  placement: "start",
+                  role: ChatRole.ASSISTANT,
+                  key: `assistant-${message.id}`,
+                  content: message.answer,
+                  shape: "corner",
+                  variant: "outlined",
+                  loading: message.loading,
+                  typing: {
+                    step: 60,
+                    interval: 100,
+                  },
+                  styles: {
+                    content: {
+                      maxWidth: "75%",
+                      borderRadius: "1.5rem",
+                      borderBottomRightRadius: "1.5rem",
+                      borderBottomLeftRadius: "0",
+                    },
+                  },
+                  footer: (
+                    <Buttons
+                      className={styles.buttons}
+                      isAi={true}
+                      message={message}
+                      onFeedback={onFeedback}
+                    />
+                  ),
+                  messageRender: renderMarkdown,
+                },
+              ];
             })}
           />
           <div style={{ paddingBottom: "168px" }}></div>

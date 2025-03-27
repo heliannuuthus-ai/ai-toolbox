@@ -1,5 +1,6 @@
 import { Layout } from "antd";
 import { createStyles } from "antd-style";
+import { Header as Glossary } from "@/pages/glossary";
 
 const useStyles = createStyles(({ css }) => ({
   header: css`
@@ -19,7 +20,7 @@ const Header = () => {
   const { styles } = useStyles();
   return (
     <AntdHeader data-tauri-drag-region className={styles.header}>
-      Header
+      <Glossary />
     </AntdHeader>
   );
 };

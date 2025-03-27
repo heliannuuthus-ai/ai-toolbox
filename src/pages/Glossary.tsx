@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Chat from "@/components/chat";
 import { sendMessage, uploadFiles, feedback } from "@/apis/glossary";
 import { ChatMessage, FileMeta } from "@/apis/types";
@@ -7,11 +7,65 @@ import { FeedbackType, ChatRole } from "@/apis/types";
 import { UploadRequestOption } from "rc-upload/lib/interface";
 import { FormInstance } from "antd/es/form";
 import { UploadFile } from "antd";
+import { EventType, WorkflowClient } from "@/utils/dify";
+import { load, save, LazyStore } from "@tauri-apps/plugin-store";
+
+const store = new LazyStore("glossary");
+const dify = new WorkflowClient("/api/glossary");
+
 const Glossary = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [generating, setGenerating] = useState(false);
-
+  const [conversationId, setConversationId] = useState<string | null>(null);
   const form = useRef<FormInstance>(null);
+
+  const init = async () => {
+    const conversationId = await store.get<string>("conversation_id");
+    if (conversationId && conversationId.length > 0) {
+      setConversationId(conversationId);
+    }
+  };
+
+  const cleanup = async () => {};
+
+
+  useEffect(() => {
+    init();
+
+    dify
+      .on(EventType.WORKFLOW_STARTED, (data) => {
+        console.log("workflow started", data);
+      })
+      .on(EventType.WORKFLOW_FINISHED, (data) => {
+        console.log("workflow finished", data);
+      })
+      .on(EventType.NODE_STARTED, (data) => {
+        console.log("node started", data);
+      })
+      .on(EventType.NODE_FINISHED, (data) => {
+        console.log("node finished", data);
+      })
+      .on(EventType.MESSAGE, (message) => {})
+      .on(EventType.MESSAGE_END, (data) => {
+        console.log("message end", data);
+      })
+      .on(EventType.ERROR, (error) => {
+        console.log("error", error);
+      });
+
+    return () => {
+      (async () => {
+        if (conversationId) {
+          try {
+            await store.set("conversation_id", conversationId);
+          } catch (error) {
+            console.log("error", error);
+          }
+        }
+      })();
+      dify.cleanup();
+    };
+  }, []);
 
   const onSubmit = async (_: any) => {
     const {
@@ -33,21 +87,11 @@ const Glossary = () => {
       return [
         ...prevMessages,
         {
-          messageId: userMessageId, // temporary
-          taskId: userMessageId, // temporary
-          conversationId: userMessageId,
-          role: ChatRole.USER,
-          content: message,
-          loading: false,
-          createdAt: timestamp,
-        },
-        {
-          messageId: assistantMessageId, // temporary
-          taskId: assistantMessageId, // temporary
-          conversationId: assistantMessageId,
-          role: ChatRole.ASSISTANT,
-          content: "",
-          loading: true,
+          id: "",
+          taskId: "",
+          conversationId: "",
+          query: message,
+          answer: "",
           createdAt: timestamp,
         },
       ];
@@ -81,16 +125,16 @@ const Glossary = () => {
             console.log("chunk", message, "prevMessages", prevMessages);
             return prevMessages.map((msg) => {
               if (
-                msg.messageId !== userMessageId &&
-                msg.messageId !== assistantMessageId &&
-                msg.messageId !== message["message_id"]
+                msg.id !== userMessageId &&
+                msg.id !== assistantMessageId &&
+                msg.id !== message["message_id"]
               ) {
                 return msg;
               }
               if (msg.role === ChatRole.ASSISTANT) {
                 return {
                   ...msg,
-                  messageId: message["message_id"],
+                  id: message["message_id"],
                   taskId: message["task_id"],
                   conversationId: message["conversation_id"],
                   content: msg.content + (message["answer"] || ""),
@@ -101,7 +145,7 @@ const Glossary = () => {
               } else {
                 return {
                   ...msg,
-                  messageId: userMessageId,
+                  id: userMessageId,
                   taskId: message["task_id"],
                   conversationId: message["conversation_id"],
                   loading: false,
@@ -110,13 +154,14 @@ const Glossary = () => {
               }
             });
           });
+          console.log("message", data);
         }
       }
     } catch (error: any) {
       console.log("error", error);
       setMessages((prevMessages) => {
         return prevMessages.map((msg) => {
-          if (msg.messageId === assistantMessageId) {
+          if (msg.id === assistantMessageId) {
             return { ...msg, content: "发送失败，请重试", loading: false };
           }
           return msg;
@@ -151,8 +196,8 @@ const Glossary = () => {
   return (
     <Chat
       form={form}
-      generating={generating}
       messages={messages}
+      generating={generating}
       onFeedback={onFeedback}
       onSubmit={onSubmit}
       onStop={onStop}

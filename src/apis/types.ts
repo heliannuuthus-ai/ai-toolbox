@@ -20,11 +20,11 @@ export enum FeedbackType {
 }
 
 export interface ChatMessage {
-  messageId: string;
+  id: string;
   taskId: string;
   conversationId: string;
-  role: ChatRole;
-  content: string;
+  query: string;
+  answer: string;
   createdAt: number;
   loading?: boolean;
   metadata?: Record<string, any>;

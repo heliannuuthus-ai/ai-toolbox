@@ -1,8 +1,14 @@
 import clientFactory from "@/apis/axios";
 import { AxiosResponse } from "axios";
-import { FileMeta, FeedbackType } from "@/apis/types";
+import { FileMeta, FeedbackType, ChatMessage } from "@/apis/types";
 
 const client = clientFactory("/api/glossary");
+
+export const fetchMessages = async (
+  conversationId: string,
+): Promise<AxiosResponse<ChatMessage[]>> => {
+  return client.get(`/${conversationId}/messages`);
+};
 
 export const fetchFileTypes = async (): Promise<
   AxiosResponse<Record<string, string[]>>

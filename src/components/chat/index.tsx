@@ -4,6 +4,9 @@ import { ChatMessage, FeedbackType } from "@/apis/types";
 import { createStyles } from "antd-style";
 import { FormInstance } from "antd";
 import { UploadRequestOption } from "rc-upload/lib/interface";
+import { useState } from "react";
+import { WorkflowClient } from "@/utils/dify";
+
 const useStyles = createStyles(({ css }) => ({
   bubbleContainer: css`
     height: 100%;
@@ -25,16 +28,16 @@ const useStyles = createStyles(({ css }) => ({
 
 const Chat = ({
   form,
-  generating,
   messages,
+  generating,
   onFeedback,
   onSubmit,
   onStop,
   onFilesChange,
 }: {
   form: React.RefObject<FormInstance | null>;
-  generating: boolean;
   messages: ChatMessage[];
+  generating: boolean;
   onFeedback: (messageId: string, feedbackType: FeedbackType) => Promise<void>;
   onFilesChange: (options: UploadRequestOption) => Promise<void>;
   onSubmit: (values: any) => Promise<void>;

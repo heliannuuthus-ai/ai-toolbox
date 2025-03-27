@@ -17,7 +17,7 @@ const Like = ({
   const onClick = () => {
     const feedback = !liked ? FeedbackType.LIKE : FeedbackType.CANCEL;
     setLiked(!liked);
-    onFeedback(message.messageId, feedback);
+    onFeedback(message.id, feedback);
   };
 
   return (
@@ -43,7 +43,7 @@ const Dislike = ({
   const onClick = () => {
     const feedback = !disliked ? FeedbackType.DISLIKE : FeedbackType.CANCEL;
     setDisliked(!disliked);
-    onFeedback(message.messageId, feedback);
+    onFeedback(message.id, feedback);
   };
   return (
     <Button

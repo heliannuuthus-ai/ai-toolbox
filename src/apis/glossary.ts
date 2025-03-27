@@ -1,13 +1,49 @@
 import clientFactory from "@/apis/axios";
 import { AxiosResponse } from "axios";
-import { FileMeta, FeedbackType, ChatMessage } from "@/apis/types";
+import {
+  FileMeta,
+  FeedbackType,
+  Conversation,
+  HistoryMessage,
+} from "@/apis/types";
 
 const client = clientFactory("/api/glossary");
 
+export const stopTask = async (taskId: string) => {
+  return client.post(`/chat/${taskId}/stop`);
+};
+
+export const getSuggested = async (id: string) => {
+  return client.get(`/suggested/${id}`);
+};
+
+export const audioToText = async (audio: File) => {
+  return client.post("/audio-to-text", audio);
+};
+
+export const textToSpeech = async (id?: string, text?: string) => {
+  return client.post(`/text-to-speech`, {
+    message_id: id,
+    text,
+  });
+};
+
+export const fetchConversations = async (): Promise<
+  AxiosResponse<Conversation[]>
+> => {
+  return client.get("/conversations");
+};
+
 export const fetchMessages = async (
   conversationId: string,
-): Promise<AxiosResponse<ChatMessage[]>> => {
-  return client.get(`/${conversationId}/messages`);
+): Promise<
+  AxiosResponse<{
+    limit: number;
+    has_more: boolean;
+    data: HistoryMessage[];
+  }>
+> => {
+  return client.get(`conversations/${conversationId}/messages`);
 };
 
 export const fetchFileTypes = async (): Promise<
@@ -37,7 +73,6 @@ export const sendMessage = async (
   thinking: boolean,
   deepSearch: boolean,
 ): Promise<AxiosResponse<ReadableStream>> => {
-  console.log("sendMessage", prompt, filesMeta, thinking);
   return client.post(
     "/chat",
     {

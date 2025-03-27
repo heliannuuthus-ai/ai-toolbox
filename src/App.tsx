@@ -3,7 +3,6 @@ import Sider from "@/layout/Sider";
 import Header from "@/layout/Header";
 import Content from "@/layout/Content";
 import ThemeProvider from "@/layout/ThemeProvider";
-
 const layoutStyle = {
   overflow: "hidden",
   width: "100%",

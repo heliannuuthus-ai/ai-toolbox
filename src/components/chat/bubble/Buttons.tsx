@@ -1,4 +1,4 @@
-import { ChatMessage, FeedbackType, ChatRole } from "@/apis/types";
+import { ChatMessage, FeedbackType } from "@/apis/types";
 import { Flex } from "antd";
 import { Copy, Edit, Dislike, Like } from "@/components/buttons";
 import { createStyles } from "antd-style";
@@ -37,15 +37,16 @@ const useStyle = createStyles(({ css, cx }) => {
 
 const Buttons = ({
   className,
+  isAi,
   message,
   onFeedback,
 }: {
   className?: string;
+  isAi: boolean;
   message: ChatMessage;
   onFeedback: (messageId: string, feedbackType: FeedbackType) => void;
 }) => {
   const { styles } = useStyle();
-  const isAi = message.role === ChatRole.ASSISTANT;
   const commonClassName = isAi ? styles.aiReplyButton : styles.userReplyButton;
 
   return (
@@ -54,18 +55,24 @@ const Buttons = ({
       className={className}
       style={{ direction: isAi ? "ltr" : "rtl" }}
     >
-      <Copy className={commonClassName} content={message.content} />
-      <Edit className={commonClassName} content={message.content} />
-      {message.role === ChatRole.ASSISTANT && (
+      <Copy
+        className={commonClassName}
+        content={isAi ? message.answer : message.query}
+      />
+      <Edit
+        className={commonClassName}
+        content={isAi ? message.answer : message.query}
+      />
+      {isAi && (
         <>
           <Dislike
             className={styles.aiReplyButton}
-            message={message}
+            id={message.id}
             onFeedback={onFeedback}
           />
           <Like
+            id={message.id}
             className={styles.aiReplyButton}
-            message={message}
             onFeedback={onFeedback}
           />
         </>

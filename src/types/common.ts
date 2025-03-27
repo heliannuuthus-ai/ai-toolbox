@@ -48,3 +48,10 @@ export type FileResponse = {
   type: string;
   url: string;
 };
+
+export interface Usage {
+  total_tokens: number;
+  total_price: string;
+  currency: string;
+  latency: number;
+}

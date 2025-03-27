@@ -44,7 +44,6 @@ const Mermaid = ({
   );
 
   useEffect(() => {
-    console.log("mermaid theme", theme.appearance);
     if (typeof window !== "undefined") {
       mermaid.initialize({
         startOnLoad: true,
@@ -63,7 +62,6 @@ const Mermaid = ({
     if (interval.current) window.clearTimeout(interval.current);
 
     interval.current = window.setTimeout(() => {
-      console.log("mermaid theme", theme.appearance);
       render(primitiveCode);
     }, 300);
   }, [primitiveCode]);

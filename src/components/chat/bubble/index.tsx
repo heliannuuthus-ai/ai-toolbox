@@ -1,6 +1,6 @@
 import { createStyles } from "antd-style";
 import { ChatMessage, FeedbackType, ChatRole } from "@/apis/types";
-import { Flex, message } from "antd";
+import { Flex } from "antd";
 import { Bubble as AntdBubble, BubbleProps } from "@ant-design/x";
 import Buttons from "./Buttons";
 import Markdown from "@/components/markdown/Markdown";
@@ -120,7 +120,7 @@ const Bubble = ({
               return [
                 {
                   className: styles.bubble,
-                  placement: "start",
+                  placement: "end",
                   role: ChatRole.USER,
                   key: `user-${message.id}`,
                   content: message.query,
@@ -139,6 +139,7 @@ const Bubble = ({
                   footer: (
                     <Buttons
                       className={styles.buttons}
+                      isAi={false}
                       message={message}
                       onFeedback={onFeedback}
                     />
@@ -147,7 +148,7 @@ const Bubble = ({
                 },
                 {
                   className: styles.bubble,
-                  placement: "end",
+                  placement: "start",
                   role: ChatRole.ASSISTANT,
                   key: `assistant-${message.id}`,
                   content: message.answer,
@@ -169,6 +170,7 @@ const Bubble = ({
                   footer: (
                     <Buttons
                       className={styles.buttons}
+                      isAi={true}
                       message={message}
                       onFeedback={onFeedback}
                     />

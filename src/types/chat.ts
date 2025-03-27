@@ -1,7 +1,8 @@
-import { FileResponse } from "./common";
+import { FileResponse, Usage } from "./common";
 
 export type Metadata = {
   retriever_resources?: CitationItem[];
+  usage?: Usage;
   annotation_reply: {
     id: string;
     account: {
@@ -12,16 +13,25 @@ export type Metadata = {
 };
 
 export type MessageEnd = {
-  id: string;
+  message_id: string;
   metadata: Metadata;
   files?: FileResponse[];
 };
 
-export type MessageReplace = {
-  id: string;
+export type Message = {
+  message_id: string;
   task_id: string;
   answer: string;
   conversation_id: string;
+  created_at: number;
+};
+
+export type MessageReplace = {
+  message_id: string;
+  task_id: string;
+  answer: string;
+  conversation_id: string;
+  created_at: number;
 };
 
 export type AnnotationReply = {

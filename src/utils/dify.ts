@@ -1,9 +1,9 @@
 import axios, {
   AxiosInstance,
+  AxiosRequestConfig,
   AxiosResponse,
   CancelTokenSource,
   Method,
-  AxiosRequestConfig,
 } from "axios";
 
 // Define event types as an enum
@@ -24,6 +24,7 @@ export enum EventType {
 }
 
 // Import types (assuming they are defined in a separate types file)
+import { MessageEnd, MessageReplace } from "@/types/chat";
 import {
   IterationFinishedResponse,
   IterationNextResponse,
@@ -35,28 +36,35 @@ import {
   WorkflowFinishedResponse,
   WorkflowStartedResponse,
 } from "@/types/workflow";
-import { MessageEnd, MessageReplace } from "@/types/chat";
 
 type Canceler = () => Promise<void>;
 
 type EventHandlerMap = {
-  [EventType.WORKFLOW_STARTED]: (data: WorkflowStartedResponse) => void;
-  [EventType.WORKFLOW_FINISHED]: (data: WorkflowFinishedResponse) => void;
-  [EventType.NODE_STARTED]: (data: NodeStartedResponse) => void;
-  [EventType.NODE_FINISHED]: (data: NodeFinishedResponse) => void;
-  [EventType.ITERATION_STARTED]: (data: IterationStartedResponse) => void;
-  [EventType.ITERATION_NEXT]: (data: IterationNextResponse) => void;
-  [EventType.ITERATION_FINISHED]: (data: IterationFinishedResponse) => void;
+  [EventType.WORKFLOW_STARTED]: (
+    data: WorkflowStartedResponse,
+  ) => Promise<void>;
+  [EventType.WORKFLOW_FINISHED]: (
+    data: WorkflowFinishedResponse,
+  ) => Promise<void>;
+  [EventType.NODE_STARTED]: (data: NodeStartedResponse) => Promise<void>;
+  [EventType.NODE_FINISHED]: (data: NodeFinishedResponse) => Promise<void>;
+  [EventType.ITERATION_STARTED]: (
+    data: IterationStartedResponse,
+  ) => Promise<void>;
+  [EventType.ITERATION_NEXT]: (data: IterationNextResponse) => Promise<void>;
+  [EventType.ITERATION_FINISHED]: (
+    data: IterationFinishedResponse,
+  ) => Promise<void>;
   [EventType.PARALLEL_BRANCH_STARTED]: (
     data: ParallelBranchStartedResponse,
-  ) => void;
+  ) => Promise<void>;
   [EventType.PARALLEL_BRANCH_FINISHED]: (
     data: ParallelBranchFinishedResponse,
-  ) => void;
-  [EventType.MESSAGE]: (data: MessageReplace) => void;
-  [EventType.MESSAGE_END]: (data: MessageEnd) => void;
-  [EventType.MESSAGE_REPLACE]: (data: MessageReplace) => void;
-  [EventType.ERROR]: (error: unknown) => void;
+  ) => Promise<void>;
+  [EventType.MESSAGE]: (data: MessageReplace) => Promise<void>;
+  [EventType.MESSAGE_END]: (data: MessageEnd) => Promise<void>;
+  [EventType.MESSAGE_REPLACE]: (data: MessageReplace) => Promise<void>;
+  [EventType.ERROR]: (error: unknown) => Promise<void>;
 };
 
 export class WorkflowClient {
@@ -102,6 +110,11 @@ export class WorkflowClient {
       const updatedHandlers = handlers.filter((h) => h !== handler);
       this.listeners.set(event, updatedHandlers);
     };
+  }
+
+  public setCanceler(canceler: Canceler) {
+    this.canceler = canceler;
+    return this;
   }
 
   public cleanup() {
@@ -153,7 +166,10 @@ export class WorkflowClient {
       while (true) {
         const { done, value } = await reader.read();
 
-        if (done) break;
+        if (done) {
+          console.log("stream ended");
+          break;
+        }
 
         buffer += decoder.decode(value);
         const lines = buffer.split("\n\n");
@@ -163,9 +179,9 @@ export class WorkflowClient {
           if (eventData.startsWith("data: ")) {
             try {
               const jsonData = JSON.parse(eventData.slice(6));
-              this.emit(jsonData);
+              await this.emit(jsonData);
             } catch (parseError) {
-              this.emitError(parseError);
+              await this.emitError(parseError);
             }
           }
         }
@@ -178,27 +194,34 @@ export class WorkflowClient {
   }
 
   // Centralized event dispatching
-  private emit(jsonData: { event: EventType; [key: string]: unknown }): void {
+  private async emit(jsonData: {
+    event: EventType;
+    [key: string]: unknown;
+  }): Promise<void> {
     const handlers = this.listeners.get(jsonData.event as EventType);
-    handlers?.forEach((handler) => {
-      try {
-        (handler as Function)(jsonData);
-      } catch (handlerError) {
-        this.emitError(handlerError);
-      }
-    });
+    await Promise.all(
+      handlers?.map(async (handler) => {
+        try {
+          await (handler as Function)(jsonData);
+        } catch (handlerError) {
+          await this.emitError(handlerError);
+        }
+      }) || [],
+    );
   }
 
   // Centralized error notification
-  private emitError(error: unknown): void {
+  private async emitError(error: unknown): Promise<void> {
     const errorHandlers = this.listeners.get(EventType.ERROR);
-    errorHandlers?.forEach((handler) => {
-      try {
-        (handler as EventHandlerMap[EventType.ERROR])(error);
-      } catch (handlerError) {
-        console.error("Error in error handler", handlerError);
-      }
-    });
+    await Promise.all(
+      errorHandlers?.map(async (handler) => {
+        try {
+          await (handler as EventHandlerMap[EventType.ERROR])(error);
+        } catch (handlerError) {
+          console.error("Error in error handler", handlerError);
+        }
+      }) || [],
+    );
   }
 
   // Cancel the current request

@@ -4,8 +4,6 @@ import { ChatMessage, FeedbackType } from "@/apis/types";
 import { createStyles } from "antd-style";
 import { FormInstance } from "antd";
 import { UploadRequestOption } from "rc-upload/lib/interface";
-import { useState } from "react";
-import { WorkflowClient } from "@/utils/dify";
 
 const useStyles = createStyles(({ css }) => ({
   bubbleContainer: css`

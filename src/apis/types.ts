@@ -21,31 +21,53 @@ export enum FeedbackType {
 
 export interface ChatMessage {
   id: string;
-  taskId: string;
   conversationId: string;
   query: string;
   answer: string;
   createdAt: number;
   loading?: boolean;
-  metadata?: Record<string, any>;
-}
-
-export interface Usage {
-  prompt_tokens: number;
-  prompt_unit_price: string;
-  prompt_price_unit: string;
-  prompt_price: string;
-  completion_tokens: number;
-  completion_unit_price: string;
-  completion_price_unit: string;
-  completion_price: string;
-  total_tokens: number;
-  total_price: string;
-  currency: string;
-  latency: number;
 }
 
 export enum ChatRole {
   USER = "user",
   ASSISTANT = "assistant",
+}
+
+export interface Conversation {
+  id: string;
+  name: string;
+  createdAt: number;
+  query: string;
+  answer: string;
+  inputs: Record<string, any>;
+  message_files: FileMeta[];
+  feedback: FeedbackType | null;
+  retriever_resources: RetrieverResource[];
+  created_at: number;
+}
+
+export interface RetrieverResource {
+  position: number;
+  dataset_id: string;
+  dataset_name: string;
+  document_id: string;
+  document_name: string;
+  segment_id: string;
+  score: number;
+  content: string;
+}
+
+export interface HistoryMessage {
+  id: string;
+  conversation_id: string;
+  parent_message_id: string;
+  query: string;
+  answer: string;
+  status: string;
+  feedback: FeedbackType | null;
+  error: string | null;
+  inputs: Record<string, any>;
+  message_files: FileMeta[];
+  retriever_resources: RetrieverResource[];
+  created_at: number;
 }

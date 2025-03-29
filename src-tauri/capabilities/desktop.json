@@ -1,8 +1,8 @@
 {
   "identifier": "desktop-capability",
   "platforms": ["macOS", "linux"],
-  "webviews": ["main"],
-  "windows": ["main"],
+  "webviews": ["main", "conversation"],
+  "windows": ["main", "conversation"],
   "permissions": [
     "global-shortcut:default",
     "dialog:default",
@@ -13,6 +13,7 @@
     "window-state:default",
     "window-state:default",
     "autostart:default",
-    "store:default"
+    "store:default",
+    "core:webview:allow-create-webview-window"
   ]
 }

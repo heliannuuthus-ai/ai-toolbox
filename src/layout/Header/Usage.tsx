@@ -6,23 +6,13 @@ import {
 } from "@ant-design/icons";
 import { UnlistenFn } from "@tauri-apps/api/event";
 import { LazyStore } from "@tauri-apps/plugin-store";
-import {
-  Button,
-  Card,
-  Flex,
-  List,
-  Menu,
-  Statistic,
-  StatisticProps,
-  Tooltip,
-  Typography,
-} from "antd";
+import { Button, Flex, Menu, StatisticProps, Tooltip, Typography } from "antd";
 import { createStyles } from "antd-style";
 import { useEffect, useState } from "react";
 import CountUp from "react-countup";
 const store = new LazyStore("glossary");
 
-const { Text, Paragraph } = Typography;
+const { Text } = Typography;
 
 const useStyles = createStyles(({ css }) => ({
   header: css`

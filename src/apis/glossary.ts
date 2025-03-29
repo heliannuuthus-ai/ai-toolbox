@@ -28,10 +28,19 @@ export const textToSpeech = async (id?: string, text?: string) => {
   });
 };
 
-export const fetchConversations = async (): Promise<
-  AxiosResponse<Conversation[]>
+export const fetchConversations = async (
+  lastId?: string,
+  limit = 20,
+): Promise<
+  AxiosResponse<{
+    limit: number;
+    has_more: boolean;
+    data: Conversation[];
+  }>
 > => {
-  return client.get("/conversations");
+  return client.get("/conversations", {
+    params: { last_id: lastId, limit },
+  });
 };
 
 export const fetchMessages = async (

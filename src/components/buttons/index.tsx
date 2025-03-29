@@ -8,7 +8,7 @@ import Feedback from "./Feedback";
 import Wrap from "./toggle/Wrap";
 import Expand from "./toggle/Expand";
 import Svg from "./toggle/Svg";
-import Sider from "./toggle/Sider";
+import Sider from "../../layout/Header/Sider";
 const { Like, Dislike } = Feedback;
 
 export {

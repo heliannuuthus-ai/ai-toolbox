@@ -36,7 +36,6 @@ export enum ChatRole {
 export interface Conversation {
   id: string;
   name: string;
-  createdAt: number;
   query: string;
   answer: string;
   inputs: Record<string, any>;

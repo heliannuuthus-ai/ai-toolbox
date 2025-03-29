@@ -3,8 +3,8 @@
     "identifier": "desktop-capability",
     "description": "",
     "local": true,
-    "windows": ["main"],
-    "webviews": ["main"],
+    "windows": ["main", "conversation"],
+    "webviews": ["main", "conversation"],
     "permissions": [
       "global-shortcut:default",
       "dialog:default",
@@ -15,7 +15,8 @@
       "window-state:default",
       "window-state:default",
       "autostart:default",
-      "store:default"
+      "store:default",
+      "core:webview:allow-create-webview-window"
     ],
     "platforms": ["macOS", "linux"]
   },
@@ -23,7 +24,7 @@
     "identifier": "migrated",
     "description": "permissions that were migrated from v1",
     "local": true,
-    "windows": ["main"],
+    "windows": ["main", "conversation"],
     "permissions": [
       "core:default",
       "fs:allow-read-file",

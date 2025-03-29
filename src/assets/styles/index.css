@@ -32,6 +32,7 @@ code {
   --divider-color: rgba(5, 5, 5, 0.06);
   --border-radius: 8px;
   --sidebar-width: 222px;
+  --sidebar-width-collapsed: 100px;
 
   font-size: 16px;
   line-height: 24px;

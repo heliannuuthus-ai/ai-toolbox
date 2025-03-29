@@ -9,7 +9,6 @@ const useStyles = createStyles(({ css, token }) => ({
   container: css`
     border-radius: 1.5rem;
     background-color: ${token.colorBgContainer};
-    bottom: 24px;
   `,
 }));
 
@@ -44,47 +43,45 @@ const Sender = ({
   };
 
   return (
-    <Flex wrap gap={12} className={styles.container}>
-      <Form
-        onFinish={onFinish}
-        ref={form}
-        initialValues={initValues}
-        style={{ width: "100%" }}
-        layout="vertical"
-      >
-        <Form.Item name="message" noStyle>
-          <AntdSender
-            ref={senderRef}
-            className={styles.container}
-            styles={{
-              input: {
-                fontSize: "16px",
-              },
-            }}
-            header={
-              <Header
-                senderRef={senderRef}
-                attachmentsRef={attachmentsRef}
-                onFilesChange={onFilesChange}
-              />
-            }
-            allowSpeech={true}
-            actions={
-              <Submit
-                generating={generating}
-                onSubmit={async () => {
-                  await onFinish(form?.current?.getFieldsValue(true));
-                }}
-                onStop={onStop}
-              />
-            }
-            onSubmit={async (_) => {
-              await onSubmit(form?.current?.getFieldsValue(true));
-            }}
-          />
-        </Form.Item>
-      </Form>
-    </Flex>
+    <Form
+      onFinish={onFinish}
+      ref={form}
+      initialValues={initValues}
+      style={{ width: "100%" }}
+      layout="vertical"
+    >
+      <Form.Item name="message" noStyle>
+        <AntdSender
+          ref={senderRef}
+          className={styles.container}
+          styles={{
+            input: {
+              fontSize: "16px",
+            },
+          }}
+          header={
+            <Header
+              senderRef={senderRef}
+              attachmentsRef={attachmentsRef}
+              onFilesChange={onFilesChange}
+            />
+          }
+          allowSpeech={true}
+          actions={
+            <Submit
+              generating={generating}
+              onSubmit={async () => {
+                await onFinish(form?.current?.getFieldsValue(true));
+              }}
+              onStop={onStop}
+            />
+          }
+          onSubmit={async (_) => {
+            await onSubmit(form?.current?.getFieldsValue(true));
+          }}
+        />
+      </Form.Item>
+    </Form>
   );
 };
 

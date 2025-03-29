@@ -125,15 +125,15 @@ const Bubble = ({
                   key: `user-${message.id}`,
                   content: message.query,
                   shape: "corner",
-                  variant: "outlined",
+                  variant: "shadow",
                   loading: false,
                   typing: undefined,
                   styles: {
                     content: {
                       maxWidth: "75%",
                       borderRadius: "1.5rem",
-                      borderBottomRightRadius: "1.5rem",
-                      borderBottomLeftRadius: "0",
+                      borderBottomRightRadius: "0",
+                      borderBottomLeftRadius: "1.5rem",
                     },
                   },
                   footer: (
@@ -153,7 +153,7 @@ const Bubble = ({
                   key: `assistant-${message.id}`,
                   content: message.answer,
                   shape: "corner",
-                  variant: "outlined",
+                  variant: "borderless",
                   loading: message.loading,
                   typing: {
                     step: 60,

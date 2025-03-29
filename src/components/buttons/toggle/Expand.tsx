@@ -1,7 +1,8 @@
-import { Button, ButtonProps } from "antd";
+import { ButtonProps } from "antd";
 import ExpandIcon from "@/assets/images/button/expand.svg?react";
 import ShrinkIcon from "@/assets/images/button/shrink.svg?react";
 import Icon from "@ant-design/icons";
+import Toggle from "./Toggle";
 
 const Expand = ({
   value,
@@ -11,12 +12,10 @@ const Expand = ({
   value?: boolean;
   onChange?: React.Dispatch<React.SetStateAction<boolean>>;
 } & Omit<ButtonProps, "value" | "onChange">) => {
-  const handleClick = async () => {
-    onChange?.(!value);
-  };
-
   return (
-    <Button
+    <Toggle
+      value={value}
+      onChange={onChange}
       shape="circle"
       type="text"
       icon={
@@ -25,7 +24,6 @@ const Expand = ({
           component={value ? ShrinkIcon : ExpandIcon}
         />
       }
-      onClick={handleClick}
       {...props}
     />
   );

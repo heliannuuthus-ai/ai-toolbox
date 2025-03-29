@@ -9,6 +9,7 @@ import { UploadRequestOption } from "rc-upload/lib/interface";
 import { guessMimeType } from "@/commands/common";
 import { FileMeta } from "@/apis/types";
 import { Thinking, DeepSearch, Upload } from "@/components/buttons";
+import Usage from "../../../layout/Header/Usage";
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`

@@ -1,13 +1,14 @@
-import Thinking from "./Thinking";
-import DeepSearch from "./DeepSearch";
+import Thinking from "./toggle/Thinking";
+import DeepSearch from "./toggle/DeepSearch";
 import Submit from "./Submit";
 import Upload from "./Upload";
-import Copy from "./Copy";
+import Copy from "./toggle/Copy";
 import Edit from "./Edit";
 import Feedback from "./Feedback";
-import Wrap from "./Wrap";
-import Expand from "./Expand";
-import Svg from "./Svg";
+import Wrap from "./toggle/Wrap";
+import Expand from "./toggle/Expand";
+import Svg from "./toggle/Svg";
+import Sider from "./toggle/Sider";
 const { Like, Dislike } = Feedback;
 
 export {
@@ -22,4 +23,5 @@ export {
   Wrap,
   Expand,
   Svg,
+  Sider,
 };

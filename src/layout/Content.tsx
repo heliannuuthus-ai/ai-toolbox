@@ -1,6 +1,9 @@
 import { createStyles } from "antd-style";
 import { Layout } from "antd";
-import { Content as Glossary } from "@/pages/glossary";
+import Glossary from "@/pages/glossary";
+import { Suspense } from "react";
+import { useRoutes } from "react-router";
+import Home from "@/pages/index";
 const { Content: AntContent } = Layout;
 
 const useStyles = createStyles(({ css }) => ({
@@ -18,7 +21,12 @@ const Content = () => {
   const { styles } = useStyles();
   return (
     <AntContent className={styles.content}>
-      <Glossary />
+      <Suspense fallback={<div>Loading...</div>}>
+        {useRoutes([
+          { path: "/", element: <Home /> },
+          { path: "/glossary", element: <Glossary /> },
+        ])}
+      </Suspense>
     </AntContent>
   );
 };

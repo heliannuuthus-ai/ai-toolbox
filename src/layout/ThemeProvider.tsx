@@ -1,10 +1,46 @@
 import { theme } from "antd";
-import { ThemeProvider as AntdStyleThemeProvider } from "antd-style";
+import {
+  ThemeProvider as AntdStyleThemeProvider,
+  CustomTokenParams,
+  extractStaticStyle,
+  GetCustomToken,
+} from "antd-style";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { useEffect } from "react";
+import { ReactNode, useCallback, useEffect } from "react";
 import { useState } from "react";
 
-const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
+declare module "antd-style" {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  export interface CustomToken extends LayoutToken {}
+}
+
+export interface LayoutToken {}
+
+const getCustomToken: GetCustomToken<LayoutToken> = ({}) => {
+  return {};
+};
+
+export interface ThemeProviderProps {
+  token?: Partial<LayoutToken>;
+  children?: ReactNode;
+  ssrInline?: boolean;
+  cache?: typeof extractStaticStyle.cache;
+}
+
+const ThemeProvider = ({ children, token, ..._props }: ThemeProviderProps) => {
+  const createCustomToken = useCallback(
+    (params: CustomTokenParams) => {
+      const base = getCustomToken(params);
+
+      if (token) {
+        return { ...base, ...token };
+      } else {
+        return base;
+      }
+    },
+    [token],
+  );
+
   const [colorMode, setColorMode] = useState<"dark" | "light">("light");
   const [dark, setDark] = useState(false);
   useEffect(() => {
@@ -18,6 +54,7 @@ const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AntdStyleThemeProvider
+      customToken={createCustomToken}
       appearance={colorMode}
       theme={{
         algorithm: dark ? theme.darkAlgorithm : theme.defaultAlgorithm,

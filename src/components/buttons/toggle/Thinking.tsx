@@ -1,7 +1,8 @@
 import LightOff from "@/assets/images/button/light-off.svg?react";
 import LightOn from "@/assets/images/button/light-on.svg?react";
 import Icon from "@ant-design/icons";
-import { Button, ButtonProps } from "antd";
+import { ButtonProps } from "antd";
+import Toggle from "./Toggle";
 const Thinking = ({
   value,
   onChange,
@@ -10,16 +11,14 @@ const Thinking = ({
   value?: boolean;
   onChange?: (value: boolean) => Promise<void>;
 } & Omit<ButtonProps, "value" | "onClick" | "onChange">) => {
-  const handleClick = async () => {
-    onChange?.(!value);
-  };
-
   return (
-    <Button
+    <Toggle
       {...props}
-      onClick={handleClick}
+      value={value}
+      onChange={onChange}
       variant={value ? "filled" : "outlined"}
       color="default"
+      shape="round"
       icon={
         <Icon
           style={{

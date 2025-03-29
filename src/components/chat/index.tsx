@@ -4,25 +4,30 @@ import { ChatMessage, FeedbackType } from "@/apis/types";
 import { createStyles } from "antd-style";
 import { FormInstance } from "antd";
 import { UploadRequestOption } from "rc-upload/lib/interface";
+import { useAppContext } from "@/App";
 
-const useStyles = createStyles(({ css }) => ({
-  bubbleContainer: css`
-    height: 100%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-  `,
+const useStyles = (openSider: boolean) =>
+  createStyles(({ css }) => ({
+    bubbleContainer: css`
+      height: 100%;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+    `,
 
-  inputContainer: css`
-    position: absolute;
-    bottom: 0;
-    left: var(--sidebar-width);
-    right: 0;
-    max-width: 50rem;
-    margin-left: auto;
-    margin-right: auto;
-  `,
-}));
+    inputContainer: css`
+      position: absolute;
+      bottom: 24px;
+      left: ${openSider
+        ? "var(--sidebar-width)"
+        : "var(--sidebar-width-collapsed)"};
+      right: 0;
+      max-width: 50rem;
+      margin-left: auto;
+      margin-right: auto;
+      transition: left 0.3s ease-in-out;
+    `,
+  }));
 
 const Chat = ({
   form,
@@ -41,7 +46,9 @@ const Chat = ({
   onSubmit: (values: any) => Promise<void>;
   onStop: () => Promise<void>;
 }) => {
-  const { styles } = useStyles();
+  const { isSiderOpen: openSider } = useAppContext();
+
+  const { styles } = useStyles(openSider)();
 
   return (
     <>

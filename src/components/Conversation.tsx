@@ -1,16 +1,6 @@
-import {
-  Divider,
-  Flex,
-  GetProp,
-  Space,
-  Spin,
-  Typography,
-  Menu,
-  MenuProps,
-  Button,
-} from "antd";
+import { Divider, Flex, GetProp, Spin, Typography, Button } from "antd";
 import { createStyles } from "antd-style";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { fetchConversations, fetchMessages } from "@/apis/glossary";
 import {
   Bubble,
